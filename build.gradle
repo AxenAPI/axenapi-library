@@ -1,0 +1,119 @@
+plugins {
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'org.sonarqube' version '2.7'
+	id 'maven-publish'
+	id 'java'
+}
+
+group = 'org.axenix'
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(Javadoc) { options.encoding = "UTF-8" }
+
+
+jar {
+	manifest {
+		attributes 'Version' : archiveVersion,
+				'Build-time' : new Date().format("dd-MM-yyyy'T'HH:mm:ss")
+	}
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+subprojects {
+	version = rootProject.version
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.boot:spring-boot-dependencies:2.2.2.RELEASE"
+	}
+}
+
+dependencies {
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure
+	implementation 'org.springframework.boot:spring-boot-autoconfigure'
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure
+	implementation 'org.springframework.boot:spring-boot-starter'
+	// https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// jms
+	implementation 'org.springframework:spring-jms'
+	implementation "javax.jms:javax.jms-api:2.0.1"
+
+	// lombok
+	compileOnly 'org.projectlombok:lombok:1.18.22'
+	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+	// AspectJ
+	implementation'org.aspectj:aspectjweaver:1.9.6'
+
+	// swagger annotations
+	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-common
+	implementation 'org.springdoc:springdoc-openapi-common:1.6.13'
+
+	// code generation
+	implementation 'com.squareup:javapoet:1.10.0'
+
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.14.0'
+
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+}
+
+task sourcesJar(type: Jar) {
+	from sourceSets.main.allJava
+	classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+	from javadoc
+	classifier = 'javadoc'
+}
+
+tasks.withType(Javadoc) {
+	options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId project.name
+			groupId project.group
+			version version
+			from components.java
+			artifact sourcesJar
+			//artifact javadocJar
+		}
+	}
+	repositories {
+		maven {
+			allowInsecureProtocol = true
+			url "${NEXUS_SERVER}"
+			credentials {
+				username NEXUS_USER
+				password NEXUS_PASSWORD
+			}
+		}
+	}
+
+}
+

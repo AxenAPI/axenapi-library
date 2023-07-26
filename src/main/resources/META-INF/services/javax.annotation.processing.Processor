@@ -1,0 +1,2 @@
+org.axenix.axenapi.processor.KafkaControllerProcessor
+org.axenix.axenapi.processor.JmsControllerProcessor
