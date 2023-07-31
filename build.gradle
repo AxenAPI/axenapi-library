@@ -79,9 +79,9 @@ dependencies {
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
 }
 
-task sourcesJar(type: Jar) {
-	from sourceSets.main.allJava
-}
+//task sourcesJar(type: Jar) {
+//	from sourceSets.main.allJava
+//}
 
 task javadocJar(type: Jar) {
 	from javadoc
@@ -98,7 +98,7 @@ publishing {
 			groupId project.group
 			version version
 			from components.java
-			artifact sourcesJar
+			//artifact sourcesJar
 			//artifact javadocJar
 		}
 	}
