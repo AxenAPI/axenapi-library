@@ -713,8 +713,8 @@ public class KafkaControllerCodeGenerator {
         } else {
             message = String.format(
                     Constants.WITH_FIXED_REPLY_TOPIC_RESPONSE_MESSAGE,
-                    returnedData.getReturnedTopicName(),
-                    returnedData.getReturnedType().getSimpleClassName()
+                    returnedData.getReturnedType().getSimpleClassName(),
+                    returnedData.getReturnedTopicName()
             );
         }
 
