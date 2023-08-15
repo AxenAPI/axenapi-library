@@ -28,7 +28,7 @@ public class KafkaSenderServiceImpl implements KafkaSenderService {
 
     @Override
     public void send(String topicName, Object message, Map<String, String> params, HttpServletResponse servletResponse) {
-        // TODO получение обработчика headers у message
+        // TODO get headers handler
         // KafkaHeaderAccessor headerAccessor = headerAccessorService.getHeaderAccessor(topicName, params);
         KafkaHeaderAccessor headerAccessor = new KafkaHeaderAccessor();
 
@@ -56,7 +56,7 @@ public class KafkaSenderServiceImpl implements KafkaSenderService {
 
     @Override
     public void send(String topicName, Object message, Map<String, String> params) {
-        // TODO получение обработчика headers у message
+        // TODO get headers handler for message
         // KafkaHeaderAccessor headerAccessor = headerAccessorService.getHeaderAccessor(topicName, params);
         KafkaHeaderAccessor headerAccessor = new KafkaHeaderAccessor();
 

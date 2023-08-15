@@ -64,7 +64,7 @@ public class TokenProducerServiceImpl implements TokenProducerService {
             }
         }
 
-        /* Удаляем сообщение, т.к. оно уже обработано. */
+        /* Remove message, this message is already proceed.*/
         tokens.remove(messageId);
 
         return Collections.unmodifiableMap(resultParams);
