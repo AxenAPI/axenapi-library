@@ -113,7 +113,7 @@ public class JmsControllerCodeGenerator {
         final String functionName = functionNameByChannelType(handler);
         final String path = pathByChannelType(handler);
 
-        /* Формируем список аннотаций для метода. */
+        /* Create annotation list for method */
         List<AnnotationSpec> methodAnnotations = new ArrayList<>();
 
         AnnotationSpec annotationSpec = AnnotationSpec
@@ -126,7 +126,7 @@ public class JmsControllerCodeGenerator {
                 .builder(Operation.class)
                 .addMember("description", "$S", handler.getDescription());
 
-        /* Добавляем аннотацию с параметрами. */
+        /* Add annotation with request params. */
         if (!handler.getProperties().isEmpty()) {
 
             List<AnnotationSpec> apiImplicitParam = annotationsByProperties(handler.getProperties());
@@ -140,7 +140,7 @@ public class JmsControllerCodeGenerator {
 
         methodAnnotations.add(operationAnnotationBuilder.build());
 
-        /* Формируем параметры метода. */
+        /* Create method arguments. */
         ParameterSpec payloadParameter = ParameterSpec
                 .builder(
                         ClassName.get(
@@ -162,7 +162,7 @@ public class JmsControllerCodeGenerator {
                 .addAnnotation(hiddenBuilder.build())
                 .build();
 
-        /* Формируем код метода. */
+        /* Create method body. */
         final String sendToBlock = "$N.send(jmsTemplateName, payload, targetName, params)";
         final String channelName = replaceSymbols(handler.getDestination());
 
