@@ -24,7 +24,7 @@ public class HeaderAccessorServiceImpl implements HeaderAccessorService {
     private final TokenProducerService tokenProducerService;
 
     public HeaderAccessorServiceImpl(TokenProducerService tokenProducerService) {
-        // TODO разобраться, откуда в KafkaHeaders появились одинаковые значения. Пришлось фильтровать, чтоб построить Map
+        // TODO filter double values in KafkaHeaders
         List<Field> fields = Arrays.stream(KafkaHeaders.class.getDeclaredFields()).collect(Collectors.toList());
         List<String> names = fields.stream().map(f -> getFieldStringValue(KafkaHeaders.class, f).map(Object::toString).orElse(null)).filter(Objects::nonNull).collect(Collectors.toList());
         List<String> namesDistinct = names.stream().distinct().collect(Collectors.toList());

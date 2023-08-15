@@ -46,7 +46,7 @@ public class KafkaControllerCodeGenerator {
     @SuppressWarnings("java:S112")
     public void writeFile(List<KafkaListenerData> listeners) throws Exception {
 
-        /* Формируем вспомогательные дто для функционала удаленного вызова. */
+        /* Form auxiliary DTOs for the remote call functionality. */
         List<JavaFileMetadata> javaFiles = listeners.stream()
                 .map(KafkaListenerData::getHandlers)
                 .flatMap(List::stream)
@@ -55,12 +55,12 @@ public class KafkaControllerCodeGenerator {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-        /* Формируем контроллеры. */
+        /* Create controllers. */
         listeners.stream()
                 .map(this::constructListenerController)
                 .forEach(javaFiles::add);
 
-        /* Записываем получившиеся файлы. */
+        /* Save created files. */
         for (JavaFileMetadata javaFileMetadata : javaFiles) {
             JavaFileObject builderFile = filer.createSourceFile(qualifiedClassName(javaFileMetadata));
 
@@ -75,7 +75,7 @@ public class KafkaControllerCodeGenerator {
         if (listenerData.getGroupId() != null && !listenerData.getGroupId().isBlank()) {
             groupId = listenerData.getGroupId();
         }
-        /* Формируем поля класса. */
+        /* Create class fields. */
         List<FieldSpec> fields = Arrays.asList(
                 JavaPoetHelper.constructField(
                         KafkaSenderService.class,
@@ -109,7 +109,7 @@ public class KafkaControllerCodeGenerator {
                 )
         );
 
-        /* Формируем конструктор. */
+        /* Create constructor. */
         MethodSpec constructorMethodSpec = MethodSpec
                 .constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
@@ -127,7 +127,7 @@ public class KafkaControllerCodeGenerator {
                 )
                 .build();
 
-        /* Формируем аннотации. */
+        /* Create annotations. */
         AnnotationSpec restControllerSpec = AnnotationSpec
                 .builder(RestController.class)
                 .build();
@@ -145,7 +145,7 @@ public class KafkaControllerCodeGenerator {
                 .addMember("value", "$T.class", AxenaAPIConfiguration.class)
                 .build();
 
-        /* Формируем класс. */
+        /* Create class */
         TypeSpec controllerTypeSpec = TypeSpec
                 .classBuilder(listenerData.getListenerClassName() + "Controller")
                 .addModifiers(Modifier.PUBLIC)
@@ -199,7 +199,7 @@ public class KafkaControllerCodeGenerator {
         final String functionName = "execute" + handler.getVariableData().getVariableType().getSimpleClassName();
         final String path =  "/" + handler.getVariableData().getVariableType().getSimpleClassName();
 
-        /* Формируем список аннотаций для метода. */
+        /* Create list of annotations for method. */
         List<AnnotationSpec> methodAnnotations = constructEndpointAnnotations(
                 EndpointAnnotationsMetadata.builder()
                         .description(handler.getDescription())
@@ -212,7 +212,7 @@ public class KafkaControllerCodeGenerator {
                 path
         );
 
-        /* Формируем параметры метода. */
+        /* Create method params (request params). */
         ParameterSpec payloadParameter = ParameterSpec
                 .builder(
                         ClassName.get(
@@ -243,7 +243,7 @@ public class KafkaControllerCodeGenerator {
                 .addAnnotation(RequestHeader.class)
                 .build();
 
-        /* Формируем код метода. */
+        /* Create method body. */
         String sendToBlock = "$N.send($N, $N, $N, $N)";
         if(handler.isSecured()) {
             String tokenToParams = "String authToken = headers.get(\"" + properties.getTokenHeader().toLowerCase() + "\"); \n" +
@@ -270,7 +270,7 @@ public class KafkaControllerCodeGenerator {
 
         CodeBlock codeBlock = codeBlockBuilder.build();
 
-        /* Формируем возвращаемое значение метода. */
+        /* Create return value of method. */
         TypeName returnedType = Objects.isNull(handler.getReturnedData()) ?
                 TypeName.VOID : JavaPoetHelper.typeNameByClassData(handler.getReturnedData().getReturnedType());
 
@@ -307,7 +307,7 @@ public class KafkaControllerCodeGenerator {
         final String functionName = "execute" + className;
         final String path =  "/" + className;
 
-        /* Формируем список аннотаций для метода. */
+        /* Create annotation lists of method. */
         List<AnnotationSpec> methodAnnotations = constructEndpointAnnotations(
                 EndpointAnnotationsMetadata.builder()
                         .description(method.getDescription())
@@ -318,7 +318,7 @@ public class KafkaControllerCodeGenerator {
                 path
         );
 
-        /* Формируем параметры метода. */
+        /* Create method arguments. */
         ParameterSpec payloadParameter = ParameterSpec
                 .builder(
                         ClassName.get(
@@ -347,10 +347,10 @@ public class KafkaControllerCodeGenerator {
                 .builder(HttpServletResponse.class, KafkaGeneratorConstants.SERVLET_RESPONSE_OBJECT)
                 .build();
 
-        /* Формируем код метода. */
+        /* Form method body. */
         CodeBlock.Builder codeBlockBuilder = CodeBlock.builder();
 
-        /* Достаем основные структуры из сгенерированной дто. */
+        /* form structure of Достаем основные структуры из сгенерированной дто. */
         codeBlockBuilder.add(
                 constructLocalVariable(
                         handler.getVariableData().getVariableType(),
