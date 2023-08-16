@@ -8,17 +8,22 @@ import javax.tools.StandardLocation;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Locale;
 import java.util.Properties;
 
 @Getter
 @Slf4j
 public class AxenAPIProperties {
+    public final static String ENG_LOCALE = "eng";
+    public final static String RUS_LOCALE = "rus";
     private String packageName;
     private String annotationName;
 
     private String tokenHeader;
 
     private boolean useKafkaHandlerAnnotation = true;
+
+    private String language;
 
     public static final String DEFAULT_HANDLER_VALUE = "org.springframework.kafka.annotation.KafkaHandler";
 
@@ -42,9 +47,15 @@ public class AxenAPIProperties {
             String kafkaHandlerString = props.getProperty("use.standart.kafkahandler.annotation");
             String tokenHeader = props.getProperty("kafka.access.token.header");
             this.tokenHeader = tokenHeader == null ? "Authorization" : tokenHeader;
+            this.language = props.getProperty("language");
             this.useKafkaHandlerAnnotation = kafkaHandlerString == null || Boolean.parseBoolean(kafkaHandlerString);
             if(annotationName == null || annotationName.isEmpty()) {
                 annotationName = DEFAULT_HANDLER_VALUE;
+            }
+
+            if(language == null || language.isBlank()
+                    || !(ENG_LOCALE.equals(language) || RUS_LOCALE.equals(language))) {
+                language = ENG_LOCALE;
             }
 
         } catch (IOException ioException) {
