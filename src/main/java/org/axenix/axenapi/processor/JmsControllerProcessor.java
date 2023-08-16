@@ -54,10 +54,10 @@ public class JmsControllerProcessor extends AbstractProcessor {
                 return false;
             }
 
-            /* Пройдем по всем элементам, использующим данную аннотацию. */
+            /* Find all places with annotation. */
             Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(jmsHandlerAnnotationElement);
 
-            /* Собираем все результаты анализа в список. */
+            /* Put result into the list. */
             List<JmsHandlerMetadata> handlers = new ArrayList<>();
 
             for (Element annotatedElement : annotatedElements) {
@@ -78,7 +78,7 @@ public class JmsControllerProcessor extends AbstractProcessor {
 
                 JmsHandler annotation = annotatedElement.getAnnotation(JmsHandler.class);
 
-                /* Получаем тип. */
+                /* get the typr. */
                 TypeMirror payloadTypeMirror = helper.getAnnotationValue(
                         helper.getAnnotationMirrorByAnnotation(annotatedElement, JmsHandler.class),
                         "payload"
