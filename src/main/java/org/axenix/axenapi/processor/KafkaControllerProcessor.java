@@ -55,30 +55,29 @@ public class KafkaControllerProcessor extends AbstractProcessor {
     @SuppressWarnings({"java:S106", "java:S3457", "java:S3516"})
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         try {
-            /* Т.к. мы запрашиваем только одну аннотация, то в annotations будет только один элемент,
-             *  соответствующий поддерживаемой аннотации. */
+            /* We request only one annotation, so we have only one element suitable for the annotation */
             TypeElement kafkaListenerAnnotationElement = annotations.stream().findFirst().orElse(null);
 
             if (kafkaListenerAnnotationElement == null) {
                 return false;
             }
 
-            /* Пройдем по всем элементам, использующим данную аннотацию. */
+            /* Get all elements with the annotation. */
             Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(kafkaListenerAnnotationElement);
 
-            /* Собираем все результаты анализа в список. */
+            /* Set results in list. */
             List<KafkaListenerData> listeners = new ArrayList<>();
 
             for (Element annotatedElement : annotatedElements) {
                 if (Objects.equals(annotatedElement.getKind(), ElementKind.METHOD)) {
-                    /* Методы пока не поддерживаются. */
+                    /* Methods are not yet supported. */
                     messager.printMessage(
                             Diagnostic.Kind.WARNING,
                             "Annotation KafkaListener does not support methods",
                             annotatedElement
                     );
                 } else if (!Objects.equals(annotatedElement.getKind(), ElementKind.CLASS)) {
-                    /* Остальные элементы, кроме класса, не могу содержать данную аннотацию. */
+                    /* Other elements, except for the class, cannot contain this annotation. */
                     messager.printMessage(
                             Diagnostic.Kind.WARNING,
                             "Annotation KafkaListener does not support this statement: " +
@@ -86,15 +85,15 @@ public class KafkaControllerProcessor extends AbstractProcessor {
                             annotatedElement
                     );
                 } else {
-                    /* Далее работаем с классом, содержащим аннотацию KafkaListener. */
-                    /* Работаем с классом в конкретном пакете (или вложенном в него), если тот указан в параметрах */
+                    /* Work with the class, that has KafkaListener annotation. */
+                    /* Work with class in the package (or nested packages), if it os specified in the parameters */
                     String packageName = properties.getPackageName();
                     if (packageName != null && !packageName.isBlank()
                             && !annotatedElement.asType().toString().startsWith(packageName)) {
                         continue;
                     }
 
-                    /* Получим список топиков. */
+                    /* Get list of topics. */
                     List<String> topics = Arrays.asList(annotatedElement.getAnnotation(KafkaListener.class).topics());
 
                     if (topics.isEmpty()) {
@@ -107,8 +106,7 @@ public class KafkaControllerProcessor extends AbstractProcessor {
                         continue;
                     }
 
-                    /* Найдем все методы, которые имеют аннотацию KafkaHandler, содержат параметры и
-                     * один из параметров похож на дто. */
+                    /* Find all methods with KafkaHandler annotation. Get DTO argument  */
                     List<KafkaHandlerData> methods = processingEnv.getElementUtils()
                         .getAllMembers((TypeElement) annotatedElement)
                         .stream()
@@ -130,7 +128,7 @@ public class KafkaControllerProcessor extends AbstractProcessor {
 
                     System.out.printf("Methods generated for kafka: %s\n", methods);
 
-                    /* Чтение группы. */
+                    /* Get group. */
                     String groupId = annotatedElement.getAnnotation(KafkaListener.class).groupId();
 
                     listeners.add(
@@ -241,14 +239,14 @@ public class KafkaControllerProcessor extends AbstractProcessor {
 
     private ReturnedData returnedDataByMethod(ExecutableElement method) {
         String replyTopic = "";
-        /* Определяем наличие типа по аннотации. */
+        /* get type from annotation */
         TypeMirror returnedTypeMirror = helper.getAnnotationValue(
                 helper.getAnnotationMirrorByAnnotation(method, KafkaHandlerResponse.class),
                 "payload"
         );
 
         if (returnedTypeMirror == null) {
-            /* Определяем наличие типа по возврату функции. */
+            /* get type from the return value. */
             returnedTypeMirror = helper.getReturnedTypeMirror(method);
         } else {
             KafkaHandlerResponse annotation = method.getAnnotation(KafkaHandlerResponse.class);
@@ -267,7 +265,7 @@ public class KafkaControllerProcessor extends AbstractProcessor {
     }
 
     private List<ParamsData> paramsDataByMethod(ExecutableElement method) {
-        /* Определяем список заголовков. */
+        /* get list of headers */
         List<ParamsData> params;
 
         KafkaHandlerHeaders headersAnnotation = method.getAnnotation(KafkaHandlerHeaders.class);
@@ -358,7 +356,7 @@ public class KafkaControllerProcessor extends AbstractProcessor {
                 .map(annotationMirror -> {
                     RemoteMethodMetadata remoteMethodMetadata = extractRemoteMethodMetadata(annotationMirror);
 
-                    /* Проверка наличия переменных для метода. */
+                    /* Check if method has arguments. */
                     if (CollectionUtils.isEmpty(remoteMethodMetadata.getVariables()) &&
                             Objects.isNull(remoteMethodMetadata.getVariablesType())
                     ) {
@@ -387,11 +385,11 @@ public class KafkaControllerProcessor extends AbstractProcessor {
 
                     return remoteMethodMetadata;
                 })
-                /* Игнорируем методы без переменных. */
+                /* Ignore methods without arguments. */
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        /* Не удалось найти хотя бы один метод. */
+        /* if can not find any suitable method. */
         if (remoteMethodMetadataList.isEmpty()) {
             return null;
         }

@@ -3,13 +3,12 @@ package org.axenix.axenapi.jms;
 import javax.jms.Message;
 
 /**
- * Обработчик jms сообщений перед отправкой.
- * В рамках библиотеки является крайней точкой обработки сообщения
+ * JMS message processor (before sending). The last place in the lib for message proceeding before sending.
  */
 public interface JmsMessagePostProcessor {
     /**
-     * Метод, внутри которого происходят изменения объекта сообщения
-     * @param message изменяемый объект сообщения
+     * Method where forming final version of message.
+     * @param message to send
      */
     void process(Message message);
 }

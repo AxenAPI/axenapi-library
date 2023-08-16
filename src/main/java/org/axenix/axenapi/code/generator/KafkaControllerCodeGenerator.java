@@ -46,7 +46,7 @@ public class KafkaControllerCodeGenerator {
     @SuppressWarnings("java:S112")
     public void writeFile(List<KafkaListenerData> listeners) throws Exception {
 
-        /* Формируем вспомогательные дто для функционала удаленного вызова. */
+        /* Form auxiliary DTOs for the remote call functionality. */
         List<JavaFileMetadata> javaFiles = listeners.stream()
                 .map(KafkaListenerData::getHandlers)
                 .flatMap(List::stream)
@@ -55,12 +55,12 @@ public class KafkaControllerCodeGenerator {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-        /* Формируем контроллеры. */
+        /* Create controllers. */
         listeners.stream()
                 .map(this::constructListenerController)
                 .forEach(javaFiles::add);
 
-        /* Записываем получившиеся файлы. */
+        /* Save created files. */
         for (JavaFileMetadata javaFileMetadata : javaFiles) {
             JavaFileObject builderFile = filer.createSourceFile(qualifiedClassName(javaFileMetadata));
 
@@ -75,7 +75,7 @@ public class KafkaControllerCodeGenerator {
         if (listenerData.getGroupId() != null && !listenerData.getGroupId().isBlank()) {
             groupId = listenerData.getGroupId();
         }
-        /* Формируем поля класса. */
+        /* Create class fields. */
         List<FieldSpec> fields = Arrays.asList(
                 JavaPoetHelper.constructField(
                         KafkaSenderService.class,
@@ -109,7 +109,7 @@ public class KafkaControllerCodeGenerator {
                 )
         );
 
-        /* Формируем конструктор. */
+        /* Create constructor. */
         MethodSpec constructorMethodSpec = MethodSpec
                 .constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
@@ -127,7 +127,7 @@ public class KafkaControllerCodeGenerator {
                 )
                 .build();
 
-        /* Формируем аннотации. */
+        /* Create annotations. */
         AnnotationSpec restControllerSpec = AnnotationSpec
                 .builder(RestController.class)
                 .build();
@@ -145,7 +145,7 @@ public class KafkaControllerCodeGenerator {
                 .addMember("value", "$T.class", AxenaAPIConfiguration.class)
                 .build();
 
-        /* Формируем класс. */
+        /* Create class */
         TypeSpec controllerTypeSpec = TypeSpec
                 .classBuilder(listenerData.getListenerClassName() + "Controller")
                 .addModifiers(Modifier.PUBLIC)
@@ -199,7 +199,7 @@ public class KafkaControllerCodeGenerator {
         final String functionName = "execute" + handler.getVariableData().getVariableType().getSimpleClassName();
         final String path =  "/" + handler.getVariableData().getVariableType().getSimpleClassName();
 
-        /* Формируем список аннотаций для метода. */
+        /* Create list of annotations for method. */
         List<AnnotationSpec> methodAnnotations = constructEndpointAnnotations(
                 EndpointAnnotationsMetadata.builder()
                         .description(handler.getDescription())
@@ -212,7 +212,7 @@ public class KafkaControllerCodeGenerator {
                 path
         );
 
-        /* Формируем параметры метода. */
+        /* Create method params (request params). */
         ParameterSpec payloadParameter = ParameterSpec
                 .builder(
                         ClassName.get(
@@ -243,7 +243,7 @@ public class KafkaControllerCodeGenerator {
                 .addAnnotation(RequestHeader.class)
                 .build();
 
-        /* Формируем код метода. */
+        /* Create method body. */
         String sendToBlock = "$N.send($N, $N, $N, $N)";
         if(handler.isSecured()) {
             String tokenToParams = "String authToken = headers.get(\"" + properties.getTokenHeader().toLowerCase() + "\"); \n" +
@@ -270,7 +270,7 @@ public class KafkaControllerCodeGenerator {
 
         CodeBlock codeBlock = codeBlockBuilder.build();
 
-        /* Формируем возвращаемое значение метода. */
+        /* Create return value of method. */
         TypeName returnedType = Objects.isNull(handler.getReturnedData()) ?
                 TypeName.VOID : JavaPoetHelper.typeNameByClassData(handler.getReturnedData().getReturnedType());
 
@@ -307,7 +307,7 @@ public class KafkaControllerCodeGenerator {
         final String functionName = "execute" + className;
         final String path =  "/" + className;
 
-        /* Формируем список аннотаций для метода. */
+        /* Create annotation lists of method. */
         List<AnnotationSpec> methodAnnotations = constructEndpointAnnotations(
                 EndpointAnnotationsMetadata.builder()
                         .description(method.getDescription())
@@ -318,7 +318,7 @@ public class KafkaControllerCodeGenerator {
                 path
         );
 
-        /* Формируем параметры метода. */
+        /* Create method arguments. */
         ParameterSpec payloadParameter = ParameterSpec
                 .builder(
                         ClassName.get(
@@ -347,10 +347,10 @@ public class KafkaControllerCodeGenerator {
                 .builder(HttpServletResponse.class, KafkaGeneratorConstants.SERVLET_RESPONSE_OBJECT)
                 .build();
 
-        /* Формируем код метода. */
+        /* Form method body. */
         CodeBlock.Builder codeBlockBuilder = CodeBlock.builder();
 
-        /* Достаем основные структуры из сгенерированной дто. */
+        /* form structure of DTO. */
         codeBlockBuilder.add(
                 constructLocalVariable(
                         handler.getVariableData().getVariableType(),
@@ -388,7 +388,7 @@ public class KafkaControllerCodeGenerator {
                 )
         );
 
-        /* Сборка окончательной структуры оригинальной дто. */
+        /* Forming the final structure of original DTO. */
         final String injectPropertyBlock = "$N.replaceMethodAndVariables($N, $S, $N, $S, $N)";
 
         codeBlockBuilder.addStatement(
@@ -401,7 +401,7 @@ public class KafkaControllerCodeGenerator {
                 KafkaGeneratorConstants.VARIABLES_OBJECT
         );
 
-        /* Отправка сообщения в кафку. */
+        /* send message to kafka. */
         final String sendToBlock = "$N.send($N, $N.getOriginalDto(), $N, $N)";
 
         codeBlockBuilder.addStatement(
@@ -421,7 +421,7 @@ public class KafkaControllerCodeGenerator {
 
         CodeBlock codeBlock = codeBlockBuilder.build();
 
-        /* Формируем возвращаемое значение метода. */
+        /* Create the return value of method. */
         TypeName returnedType = Objects.isNull(handler.getReturnedData()) ?
                 TypeName.VOID : JavaPoetHelper.typeNameByClassData(handler.getReturnedData().getReturnedType());
 
@@ -450,11 +450,11 @@ public class KafkaControllerCodeGenerator {
     }
 
     private List<JavaFileMetadata> constructRemoteMethodModels(KafkaHandlerData kafkaHandlerData, RemoteMethodMetadata method) {
-        /* Формируем дто с переменными метода. */
+        /* Create DTO with method variables. */
         JavaFileMetadata variableDto = null;
         ClassData variableType;
 
-        /* Генерируем дто с переменными, если тип дто не задан. */
+        /* Generate DTO with variables, if type is not set */
         if (Objects.isNull(method.getVariablesType())) {
             variableDto = constructRemoteMethodVariableDto(method);
             variableType = ClassData.builder()
@@ -465,7 +465,7 @@ public class KafkaControllerCodeGenerator {
             variableType = method.getVariablesType();
         }
         
-        /* Формируем вспомогательную дто с оригинальной дто и переменными. */
+        /* Create additional DTO with original DTO and variables. */
         JavaFileMetadata remoteMethodSupportDto = constructRemoteMethodSupportDto(
                         kafkaHandlerData, 
                         method,
@@ -499,7 +499,9 @@ public class KafkaControllerCodeGenerator {
                 Info.DTO_PACKAGE,
                 fields,
                 JavaPoetHelper.constructApiModelAnnotation(
-                        String.format("Параметры метода %s", method.getPropertyValue())
+                        String.format(AxenAPIProperties.RUS_LOCALE.equals(properties.getLanguage()) ?
+                                "Параметры метода %s" :
+                                "Method parameters %s", method.getPropertyValue())
                 )
         );
 
@@ -533,7 +535,8 @@ public class KafkaControllerCodeGenerator {
                                 AnnotationSpec.builder(NotNull.class)
                                         .build(),
                                 JavaPoetHelper.constructApiModelPropertyAnnotation(
-                                        "Исходное дто",
+                                        AxenAPIProperties.RUS_LOCALE.equals(properties.getLanguage()) ?
+                                                "Исходное дто" : "Original DTO",
                                         true
                                 )
                         ),
@@ -548,7 +551,9 @@ public class KafkaControllerCodeGenerator {
                                 AnnotationSpec.builder(NotNull.class)
                                         .build(),
                                 JavaPoetHelper.constructApiModelPropertyAnnotation(
-                                        String.format("Параметры метода %s", method.getPropertyValue()),
+                                        String.format(AxenAPIProperties.RUS_LOCALE.equals(properties.getLanguage()) ?
+                                                "Параметры метода %s" :
+                                                "Method parameters %s", method.getPropertyValue()),
                                         true
                                 )
                         ),
@@ -639,12 +644,12 @@ public class KafkaControllerCodeGenerator {
                 .build();
         methodAnnotations.add(annotationSpec);
 
-        /* Формирование аннотации для описания метода. */
+        /* Create annotation with method description. */
         AnnotationSpec.Builder operationAnnotationBuilder =  AnnotationSpec
                 .builder(Operation.class)
                 .addMember("description", "$S", endpointMetadata.getDescription());
 
-        /* Добавляем список тэгов. */
+        /* Add tags. */
         if (!endpointMetadata.getTags().isEmpty()) {
             CodeBlock codeBlock = endpointMetadata.getTags()
                             .stream()
@@ -655,7 +660,7 @@ public class KafkaControllerCodeGenerator {
         }
 
 
-        /* Добавляем аннотацию с параметрами. */
+        /* Add annotation with params. */
         if (!endpointMetadata.getParams().isEmpty()) {
 
             List<AnnotationSpec> apiImplicitParam = constructAnnotationsByParams(endpointMetadata.getParams());
@@ -670,7 +675,7 @@ public class KafkaControllerCodeGenerator {
         methodAnnotations.add(operationAnnotationBuilder.build());
         methodAnnotations.add(constructResponseAnnotation(endpointMetadata.getReturnedData()));
 
-        /* добавляем security аннотацию */
+        /* Add security annotation. */
         if(endpointMetadata.isSecured()) {
             AnnotationSpec.Builder openApiSecurityBuilder =  AnnotationSpec
                     .builder(SecurityRequirement.class)
@@ -704,18 +709,37 @@ public class KafkaControllerCodeGenerator {
         String message;
 
         if (returnedData == null) {
-            message = Constants.WITHOUT_RESPONSE_MESSAGE;
+            if(AxenAPIProperties.RUS_LOCALE.equals(properties.getLanguage())) {
+                message = Constants.WITHOUT_RESPONSE_MESSAGE;
+            } else {
+                message = Constants.WITHOUT_RESPONSE_MESSAGE_ENG;
+            }
         } else if (returnedData.getReturnedTopicName().isEmpty()) {
-            message = String.format(
-                    Constants.WITH_REPLY_TOPIC_RESPONSE_MESSAGE,
-                    returnedData.getReturnedType().getSimpleClassName()
-            );
+            if(AxenAPIProperties.RUS_LOCALE.equals(properties.getLanguage())) {
+                message = String.format(
+                        Constants.WITH_REPLY_TOPIC_RESPONSE_MESSAGE,
+                        returnedData.getReturnedType().getSimpleClassName()
+                );
+            } else {
+                message = String.format(
+                        Constants.WITH_REPLY_TOPIC_RESPONSE_MESSAGE_ENG,
+                        returnedData.getReturnedType().getSimpleClassName()
+                );
+            }
         } else {
-            message = String.format(
-                    Constants.WITH_FIXED_REPLY_TOPIC_RESPONSE_MESSAGE,
-                    returnedData.getReturnedType().getSimpleClassName(),
-                    returnedData.getReturnedTopicName()
-            );
+            if(AxenAPIProperties.RUS_LOCALE.equals(properties.getLanguage())) {
+                message = String.format(
+                        Constants.WITH_FIXED_REPLY_TOPIC_RESPONSE_MESSAGE,
+                        returnedData.getReturnedType().getSimpleClassName(),
+                        returnedData.getReturnedTopicName()
+                );
+            } else {
+                message = String.format(
+                        Constants.WITH_FIXED_REPLY_TOPIC_RESPONSE_MESSAGE_ENG,
+                        returnedData.getReturnedType().getSimpleClassName(),
+                        returnedData.getReturnedTopicName()
+                );
+            }
         }
 
         responseAnnotationSpec.addMember("description", "$S", message);

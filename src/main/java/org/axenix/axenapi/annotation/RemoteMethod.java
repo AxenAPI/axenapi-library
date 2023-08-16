@@ -2,29 +2,29 @@ package org.axenix.axenapi.annotation;
 
 public @interface RemoteMethod {
     /**
-     * Наименование метода
+     * name of method
      */
     String propertyValue();
 
     /**
-     * Описание метода
+     * description of method
      */
     String description();
 
     /**
-     * Список переменных метода
+     * list of methods arguments
      */
     RemoteMethodVariable[] variables() default {};
 
     /**
-     * Список переменных метода в виде одного dto.
+     * List of arguments pf method as one DTO.
      *
-     * Переопределеные данные, передаваемые в variables
+     * Overridden data passed in variables
      */
     Class<?> variablesType() default Void.class;
 
     /**
-     * Список тэгов метода
+     * list of methods tags
      */
     String[] tags() default {};
 }

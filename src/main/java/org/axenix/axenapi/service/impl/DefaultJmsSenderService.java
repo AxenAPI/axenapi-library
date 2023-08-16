@@ -30,14 +30,14 @@ public class DefaultJmsSenderService implements JmsSenderService {
         params.forEach((key, value) -> log.debug("key: {} value: {}", key, value));
 
         JmsTemplate template = registry.receive(jmsTemplateName)
-            .orElseThrow(() -> new IllegalStateException("JmsTemplate " + jmsTemplateName + " не найден"));
+            .orElseThrow(() -> new IllegalStateException("JmsTemplate " + jmsTemplateName + " not find"));
 
         template.convertAndSend(destination, payload, m -> {
             params.forEach((k, v) -> {
                 try {
                     m.setObjectProperty(k, v);
                 } catch (JMSException jmsException) {
-                    log.error("Не удалось задать параметр для сообщения", jmsException);
+                    log.error("Can not put parameter for message.", jmsException);
                 }
             });
 
