@@ -2,30 +2,30 @@ package org.axenix.axenapi.annotation;
 
 public @interface KafkaHandlerRemoteMethod {
     /**
-     * Свойство для подстановки значений методов
+     * Property for method value substitution
      *
-     * Не может быть пустым и содержать пробелы, должно отражать путь до свойства,
-     * вложенные свойства описываются через '.'
-     * Пример: task.method
+     * Should not be empty, should contain the path to the property.
+     * Nested properties describes with '.'
+     * Example: task.method
      */
     String methodPropertyName();
 
     /**
-     * Свойство для подстановки переменных метода
+     * Property for arguments of method.
      *
-     * Не может быть пустым и содержать пробелы, должно отражать путь до свойства,
-     * вложенные свойства описываются через '.'
-     * Пример: task.variables
+     * Should not be empty, should contain the path to the property.
+     * Nested properties describes with '.'
+     * Example: task.variables
      */
     String variablesPropertyName();
 
     /**
-     * Описывает тип свойства с методом.
+     * Type of property with method name.
      */
     Class<?> methodPropertyType() default String.class;
 
     /**
-     * Описания методов: название метода и список переменных
+     * Descriptions of methods: name and arguments
      */
     RemoteMethod[] methods();
 }
