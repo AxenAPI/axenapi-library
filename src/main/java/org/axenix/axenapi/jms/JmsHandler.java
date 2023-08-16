@@ -4,19 +4,18 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 /**
- * Аннотацией помечается класс, обрабатывающий дто полученную из jms listener.
+ * The annotation to mark the class that handles the object received from the jms.
  */
 @Target(ElementType.TYPE)
 public @interface JmsHandler {
     /**
-     * @return имя по которому будет произведен поиск {@link org.springframework.jms.core.JmsTemplate}
+     * @return Annotation name for searching handlers {@link org.springframework.jms.core.JmsTemplate}
      * {@link JmsTemplateRegistry}
      */
     String jmsTemplateName();
 
     /**
-     * @return список параметров, который будет передаваться в запросе
-     * и заноситься в {@link javax.jms.Message##setObjectProperty(String, Object)}
+     * @return list of parameters are sent in request and put in {@link javax.jms.Message##setObjectProperty(String, Object)}
      */
     JmsProperty[] properties() default {};
     Class<?> payload();

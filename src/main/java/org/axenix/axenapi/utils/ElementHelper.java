@@ -21,14 +21,14 @@ public class ElementHelper {
     public boolean existsDtoInParameters(ExecutableElement executableElement) {
         List<? extends VariableElement> variableElements = executableElement.getParameters();
         if (variableElements.isEmpty()) {
-            /* Проверка наличия аргументов у функции. */
+            /* check if method has arguments */
             return false;
         }
 
-        /* если у хэндлера только 1 параметр, то это payload */
+        /* if method has one param, this param is payload */
         if (variableElements.size() == 1) return true;
 
-        /* Возвращаем факт наличия объектов, помеченных аннотацией Payload */
+        /* return true, if method hs @Payload param */
         return variableElements
                 .stream()
                 .anyMatch(this::isPayload);
@@ -105,7 +105,7 @@ public class ElementHelper {
     }
 
     public TypeMirror getReturnedTypeMirror(ExecutableElement method) {
-        /* Определяем есть ли тип возвращаемого значения у функции. */
+        /* check if method has return type */
         TypeMirror returnedTypeMirror = method.getReturnType();
 
         if (returnedTypeMirror instanceof DeclaredType) {

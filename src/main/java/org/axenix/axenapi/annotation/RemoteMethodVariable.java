@@ -2,18 +2,17 @@ package org.axenix.axenapi.annotation;
 
 public @interface RemoteMethodVariable {
     /**
-     * Описание переменной метода
+     * Description of method variable
      */
     String description();
 
     /**
-     * Наименование поля переменной
-     * Должен быть валидным именем переменной Java
+     * Name of variable field. Should be appropriate to Java language.
      */
     String propertyFieldName();
 
     /**
-     * Тип переменной
+     * Variable type.
      */
     Class<?> type();
 }

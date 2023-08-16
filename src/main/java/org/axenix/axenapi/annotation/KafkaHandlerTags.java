@@ -2,7 +2,7 @@ package org.axenix.axenapi.annotation;
 
 public @interface KafkaHandlerTags {
     /**
-     * Список тэгов хендлера
+     * list of tags
      */
     String[] tags() default {};
 }
