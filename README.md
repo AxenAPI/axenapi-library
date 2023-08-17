@@ -1,40 +1,41 @@
 # AxenAPI
 
-Библиотека предназначена для автоматического создания документации в формате OpenAPI 3 для взаимодействий по kafka и jms. При сборке проекта с помощью annotationProcessor по kafka и jms consumers генерируются spring-mvc controllers повторяющие интерфейс соответсвующих consumers. Таким обрахзом, по созданным контроллерам подно будет создать документацию в формате OpenAPI 3 (с помощью springdoc-ui, или springdoc-plugin или openapi-generator).
+Tool for automatically creating documentation in OpenAPI 3 format for kafka and jms integrations. When building project using `annotationProcessor` for kafka and jms consumers, spring-mvc controllers will be generated, using consumer interfaces. This tool allows creating OpenAPI 3 documentation for generated controllers(using springdoc-ui, or springdoc-plugin or openapi-generator).
 
-# Описание
+# Description
 
-## Формат url для контроллера, повторяющего интерфейс consumer
+## Format of controllers corresponds to consumer interfaces.
 
-Для каждого Listener формируется свой контроллер с именем `<ListenerClassName>Controller`.
+For every `Listener` a controller `<ListenerClassName>Controller` will be generated.
 
-Пример сгенерированного http метода:
-* Метод Post
+Example of generated http method:
+
+* POST method:
 * Url: "/kafka/group-2/multiType/Subordinate"
-* Возвращает: Subordinate
+* Returns: Subordinate
 
-Описание формата:
-- все сгенерированные http интерфейсы - post методы
-- все сгенерированные интерфейсы имеют url состоящий из 3-4 частей:
-     - первая часть: всегда начинаются с kafka/ - позволяет отделить сгенерированные url от уже имеющихся в приложении http интерфейсов
-     - вторая часть: группа - необязательная часть. Если url состоит из 3 частей, то считается, что группа не указана.
-     - третья часть: наименование топика
-     - четвертая часть: наименование считываемой из топика модели данных (DTO)
+Format description:
+- All generated http interfaces - are POST methods
+- All generated interfaces have url, consisting of 3-4 parts:
+  - first part: always starts with kafka/ - which allows to separate generated url from already existing in applicatio http interfaces.
+  - second part: group - is optional. If url consists of 3 parts - that means that group is not specified.
+  - third part: topic name.
+  - fourth part: Name of data models being read from topic(DTO).
 
-> :bulb: Остальная логика не нуждается в дополнительном описании. По сгенерированным контроллерам теперь есть возможность создать спецификацию в OpenAPI формате. Описание формата: https://spec.openapis.org/oas/latest.html
-
-
-
-Работа с хедерами:
-- добавление хедеров к сообщению происходит через добавление параметров для эндпойнта, далее они копируются для отправки в кафку/jms;
-- `__TypeId__` формируется автоматически и его заполнять нет необходимости
-- Значения других хедеров заполняются, если они были указаны с помощью аннотаций `@KafkaHandlerHeaders` и `@KafkaHandlerHeader` 
-- токен авторизации будет передан в качестве хедера с наименованием указанном в параметре генерации контроллеров `kafka.access.token.header`, если указана аннотация `@KafkaSecured`
+> 💡 Other logic does not require additional description. You can create OpenAPI specification from generated controller. Format descriptipn: https://spec.openapis.org/oas/latest.html. Authorization should be described by OpenAPI 3.* specification.
 
 
-## Параметры генерации контроллеров
-Параметры генерации можно указать в файле `axenapi.properties`. Файл должен находится в корне проекта. 
-Пример файла:
+
+Using headers:
+- To add header to message, endpoint parameters should be added, then they will be copied to kafka/jms;
+- `__TypeId__` is formed automatically and should not be filled manually.
+- Values of ohter headers will be filled, if they were specified with `@KafkaHandlerHeaders` or `@KafkaHandlerHeader` annotations.
+- Auth token will be sent as header with name, that was specified  in `kafka.access.token.header` parameter, if annotation `@KafkaSecured` was used.
+
+
+## Controller generation parameters:
+Generation parameters can be specified in `axenapi.properties`. File should be stored in root directory of your project.
+File example:
 
 ```
 package = com.example.demo
@@ -42,68 +43,69 @@ kafka.handler.annotaion = com.example.demo.annotation.MyKafkaHandler
 use.standart.kafkahandler.annotation = true
 kafka.access.token.header = SERVICE_ACCESS_TOKEN
 ```
-**Описание параметров:**
+**Parameters description:**
 
-| наименование                         | тип                | значение по умодчанию | описание                                                                                                                                                                                                                                                                                                                            |
-|--------------------------------------|--------------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| package                              | String             | -                     | указывается пакет, в который  бцдет обрабатываться с помощью annotationProcessor. Consumers из других пакетов будут проигнорированы и по ним не будет сгенерирован spring mvc controller. Если не указано, но сканируется весь проект.                                                                                              | 
-| kafka.handler.annotaion              | String             | -                     | если в проекте для kafka consumrs используется кастомная аннотация, то чтобы annotationProcessor учитывал такие consumers надо указать в параметре полное наименование вашей кастомной аннотации. Если не указано, то annotationProcessor работат с аннотацией из spring-kafka: `org.springframework.kafka.annotation.KafkaHandler` |
-| use.standart.kafkahandler.annotation | String             | true                  | если указан `false`, то будут учитывать только consumers с вашей кастомной аннотацией. Иначе, будут учитыватья и consumers с аннотацией `org.springframework.kafka.annotation.KafkaHandler`.                                                                                                                                        |
-| kafka.access.token.header            | String             | Authorization         | наименования хедера, куда помещается токен авторизации при отправки в Kafka/JMS.                                                                                                                                                                                                                                                    |
-| language                             | String (eng / rus) | eng                   | язык генерации дополнительной инфорции. Возмозжые значения: eng, rus.                                                                                                                                                                                                                                                               |
+| name                                 | type   | default value | description                                                                                                                                                                                                                                                                                  |
+|--------------------------------------|--------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| package                              | String | -             | Package, which well be processed by `annotationProcessor`. Consumers from other packages will be ignored. If not specified, all project will be scanned.                                                                                                                                     |
+| kafka.handler.annotaion              | String | -             | If custom annotations are used in your consumers, to `annotationProcessor` be able to process them correctly, full name of your custon annotation should be specified. If not specified, then annotationProcessor whil use spring-kafka: `org.springframework.kafka.annotation.KafkaHandler` |
+| use.standart.kafkahandler.annotation | String | true          | If `false`, then only consumers annotated with your custom annotations will be processed. Else consumers using `org.springframework.kafka.annotation.KafkaHandler` will be processed too.                                                                                                    |
+| kafka.access.token.header            | String | Authorization | Name of the header, in which auth token for в Kafka/JMS will be stored.                                                                                                                                                                                                                      |
+| language                             | String | eng           | Language of additional information in generated controllers. Supported values: eng, rus                                                                                                                                                                                                      | 
 
-## Параметры влияющие на работу сгенерированных котроллеров, после запуска приложения
 
-Параметры указываются в application.properties (или application.yml) файле.
+## Parameters influencing generated controllers in runtime:
 
-| наименование                   | тип     | значение по умолчанию | описание                                                                                                                   |
-|--------------------------------|---------|-----------------------|----------------------------------------------------------------------------------------------------------------------------|
-| axenapi.kafka.swagger.enabled  | boolean | false                 | если указан false, то сгенерированные контроллеры не будут подгружаться в spring context во время запуска приложения       
-| axenapi.headers.sendBytes      | boolean | true                  | если указан false, то при использовании контроллеров не будет отправляться доплнительный header с маппиногом типов headers 
+Parameters should be specified in application.properties(or application.yml) file.
 
-## Алгоритм работы
-Весь процесс выполняется во время сборки сервиса с помощью annotationProcessor на этапе сборке проекта. 
+| name                            | type     | default value          | description                                                                                                                 |
+|---------------------------------|----------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| axenapi.kafka.swagger.enabled   | boolean  | false                  | If `false`, then generated controllers will not be loaded to spring context when starting application                       |
+| axenapi.headers.sendBytes       | boolean  | true                   | If `false`, then additional header with header types mapping will not be used in generated controllers                      |
+
+## How this tool works
+All generation happens when using annotationProcessor at the stage of building your project.
 
 ### Kafka
-- определяются все классы с аннотациями `@KafkaListener` 
-- если пакет найденного класса отличается от указанного в `axenapi.properties` в свойстве `package`, 
-  то такой класс игнорируется
-- в этих классах определяются все методы с аннотацией `@KafkaHandler` (и/или указанной в параметре `kafka.handler.annotaion`)
-- проверяется наличие payload объекта. Если у хэндлера только один параметр, то он воспринимается как payload, если несколько, то ищется тот,
-  что помечен аннотацией `org.springframework.messaging.handler.annotation.Payload`
-- если метод содержит возвращаемое значение, либо имеется аннотация, описывающая тип возвращаемого значение, то тип запоминается;
-- для каждого листенера по полученным данным генерируется код контроллера в пакете org.axenix.axenapi.controller;
-- каждый метод контроллера реализует отправку сообщения в кафку по определенному топику и названию DTO.
+- All classes annotated with `@KafkaListener` are scanned
+- if package of scanned class is different form specified in parameter `package` of `axenapi.properties` file,
+  such class will be ignored
+- In these classes all methods annotated with `@KafkaHandler` (and/or specified in `kafka.handler.annotaion` parameter) are scanned
+- Object payload is checked. If handler has a single paramter, it would be identified as payload, if it has several parameters, then the one
+  annotated with `org.springframework.messaging.handler.annotation.Payload` will be identified.
+- If method has a return value, or has annotation, specifying the type of return value, then this type is being identified.
+- For every listener controller code will be generated, using data received from previous steps. Generated code will use package org.axenix.axenapi.controller;
+- Every method send messages to kafka to specified topic and DTO name.
 
 ### JMS
-- определяются все классы с аннотациями `@JmsHandler`;
-- если пакет найденного класса отличается от указанного в `axenapi.properties` в свойстве `package`,
-  то такой класс игнорируется
-- по `@JmsHandler.jmsTemplateName()` будет произведен поиск в `JmsTemplateRegistry` подходящего `JmsTemplate`
-- по `@JmsHandler.destination()` определяется то, куда будет отправлено сообщение
-- по `@JmsHandler.properties()` будет сформирован список параметров, что будут добавлены в `Message`
-- по `@JmsHandler.description()` будет создано описание для эндпоинта
-- по `@JmsHandler.payload()` сформировано название эндпоинта и тип сообщения
+- All classes annotated with `@JmsHandler` are scanned;
+- if package of scanned class is different form specified in parameter `package` of `axenapi.properties` file,
+  such class will be ignored
+- By `@JmsHandler.jmsTemplateName()` template `JmsTemplateRegistry` will be scanned for apropriate `JmsTemplate`
+- By `@JmsHandler.destination()` massegae destination will be specified
+- By `@JmsHandler.properties()` list of parametes which willbe added to `Message` will be formed
+- By `@JmsHandler.description()` endpoint description will be created
+- By `@JmsHandler.payload()` message type and endpoint name will be formed
 
-При запуске сервиса сваггер подхватывает сгенерированные контроллеры и с ними можно работать как с обычным контроллером.
+When launching service `swagger` will process it, and you will be able to work with it like with regular controller.
 
-## Подключение к проекту
+## Installation
 
-Для добавления библиотеки в проект необходимо:
-- добавить процессор аннотаций для генерации кода контроллера:
-,
-        annotationProcessor "org.axenix:axenapi:{current_version}" 
+To install this tool to you project:
+- add annotation processpr for controller generation:
+  ,
+  annotationProcessor "org.axenix:axenapi:{current_version}"
 
-- при необходимости использования аннотаций добавить имплементацию:
+- if needed, add an inmplentation:
 
         implementation "org.axenix:axenapi:{current_version}"
 
-- при необходимости можно добавить файл `axenapi.properties`. Если файла нет, то всем параметрам генерации кода укажется значение по умодчанию.
+- if needed, add `axenapi.properties` file. If this file doesn't exist, then all parameters will be set to default values.
 
 ### JMS
 
-Дополнительно для работы через JMS необходимо зарегистрировать `JmsTemplate` в `JmsTemplateRegistry` 
-по соответствующему значению `@JmsHandler.jmsTemplateName()`
+Additionally, to work with JMS you neew to register `JmsTemplate` im `JmsTemplateRegistry`
+by corresponding `@JmsHandler.jmsTemplateName()`
 ```java
 @Configuration
 public class ServiceConfiguration {
@@ -118,8 +120,8 @@ public class ServiceConfiguration {
 }
 ```
 
-## (Опционально) Подключение swagger-ui
-Для удобства работы рекомендуется разделить документации http интерфейсов вашего приложения и документацию http интерфейсов сгенерированных по consumers. Для этого ваше api можно раздели на две группы в Swagger-ui. Мы рекомендуем исользовать Springdoc-UI (нужно добавить зависимость от библиотеки `org.springdoc:springdoc-openapi-ui:<version>`). Далее следует пример подключения springdoc-ui, в котором api разделено на две группы и есть два вида аутентификации. 
+## (Optional) installing swagger-ui
+For convenience it is recommended to separate documentation of your application's http interfaces and documentation of generated consumer intefaces. To achieve that you can separate your documentation in thwo groups in Swagger-ui. We recommend to use Springdoc-UI (Dependecny on `org.springdoc:springdoc-openapi-ui:<version>` should be added). Here's an example of using springdoc-ui, in which api is separated and has two different types of authenication.
 
 ```java
 @Configuration
@@ -153,117 +155,114 @@ public class OpenApiConfiguration {
 }
 ```
 
-## Описание аннотаций для создания документации
+## Descripton of annotations used for creating documentaton:
 
 ### Kafka
 
-Библиотека предоставляет следующие аннотации:
-- `@KafkaHandlerResponse` - для добавления в контроллер типа возвращаемого значения;
-- `@KafkaHandlerHeaders` - для описания списка хедеров для отправки в кафку;
-  - `@KafkaHandlerHeader` - для описания конкретного хедера для отправки в кафку;
-- `@KafkaHandlerDescription` - для добавления описания хендлера;
-- `@KafkaHandlerTags` - для добавления меток группировки методов;
-- `@KafkaRemoteMethods` - для разделения одного метода на несколько в зависимости от названия метода 
-и списка его переменных;
-  - `@RemoteMethod` - для описания наименования метода, его меток и списка переменных для этого метода;
-    - `@RemoteMethodVariable` - для описания одной переменной метода.
-- `@KafkaSecured` - если требуется авторизация. В скобках можно указать наименование securirty scheme в OpenAPI спецификации. Значение по умолчанию -   `Internal-Token`
+Tool consist of following annotations:
+- `@KafkaHandlerResponse` - to add return type to your controller;
+- `@KafkaHandlerHeaders` - to specify headers for your Kafka messages;
+  - `@KafkaHandlerHeader` - to specify a particular header;
+- `@KafkaHandlerDescription` - to specify handler;
+- `@KafkaHandlerTags` - to add tags for grouping methods;
+- `@KafkaRemoteMethods` - to separate one method to several by method name and it's parameters;
+  - `@RemoteMethod` - to specify method's name, it's tags and variables;
+    - `@RemoteMethodVariable` - to specify one of the method's variables.
+- `@KafkaSecured` - if authorization is required. In brakcets you can specify a securirty scheme's of OpenAPI specification name. Default value -  `Internal-Token`
 
-Добавление возвращаемого значения:
-- если метод хандлера возвращает значение, то тип автоматически подхватится, а в описание добавится информация,
-  что возвращаемое значение синхронное, а ответ отправляется в топик, полученный из хедера `replyTopic`;
-- если метод хандлера возвращает значение, но ответ приходит в конкретный топик, то можно добавить аннотацию `@KafkaHandlerResponse`
-  и прописать название топика и тип возвращаемого значения, в этом случае тип возвращаемого значения будет заменен на тип из аннотации;
-- если метод не возвращает значение, но в логике ответ предусмотрен, то можно добавить аннотацию `@KafkaHandlerResponse` определив
-  тип возвращаемого значения, при этом, если не указывать параметр `replyTopic`, то в описание добавится
-  информация, что ответ возвращается в топик, полученный из хедера `replyTopic`, а если указать - то в топик из аннотации.
+Adding return value:
+- If method's handler returns value, then it's type will be identified automatically, and to information, that
+  return type is synchronous will be added to descriptipon, and response will be send to topic, acquired from header `replyTopic`;
+- If method's handler returns value, but response is sent to particular topic, you can add anotation `@KafkaHandlerResponse`
+  and specify topic's name and return value type. In this case, return value type will be of that specified in annotation;
+- if method doesn't have a return value, but the response is possible in logic, you can use annotation `@KafkaHandlerResponse` and
+  specify return value type, but if parameter `replyTopic` is not sepcified, then to description will be added information, that
+  response will be sent to topic, recieved from `replyTopic` topic, if this parameter is specified - response will be sent to topic from annotation.
 
-Примеры добавления аннотаций:
-- добавление возвращаемого значения
+Annotation usage example:
+- adding return value
 ```Java
    @KafkaHandlerResponse(payload = CallStatusDataDto.class)
 ```
-- добавление заголовков для кафки:
+- adding kafka headers:
 ```Java
    @KafkaHandlerHeaders(headers = {
         @KafkaHandlerHeader(header = "replyTopic", required = true)
    })
 ```
-- добавление описания:
+- adding description:
 ```Java
    @KafkaHandlerDescription("Обработка сообщений из топиков")
 ```
-- добавление меток:
+- adding tags:
 ```Java
    @KafkaHandlerTags(tags = {"call2", "call3"})
 ```
-- Добавить информацию о securirty для handler:
+- adding securirty information for handler:
   - `@KafkaSecured(name = "my-securty-scheme")`
 
-#### Разделение на методы - RemoteMethod
-Если во входном дто у хендлера одно из полей типа `Map<String, Object>`, что является набором переменных,
-то Swagger не сможет понять какие данные требуются в этом поле и их придется заполнять самостоятельно, но
-описание того как заполнять будет недоступно, поэтому эта задача требует понимания того, что подается на вход.
+#### Separating methods - RemoteMethod
+If handler's dto has parameter of `Map<String, Object>` type, wich is a set of variables,
+then Swagger will not be able to identify which data is used in this field, and it should be filled manually, but
+description of how this filed should be filled will not be availavle, which means that this task requires understanding of input parameters.
 
-Такой подход требует наличия другого поля типа `String` или `Enum`, что является названием метода, ключом, 
-по которому определялся бы набор переменных типа `Map<String, Object>`.
+This approach requires addition of a different field of `String` or `Enum` types, which will be storing method names, keys,
+to identify setes of variables of `Map<String, Object>` type.
 
-Чтобы предоставить Swagger'у информацию о методах и их переменных добавлена возможность `RemoteMethod`. 
-Она как бы разбивает один метода на несколько, каждый из которых имеет свой ряд переменных.
+To provide Swagger with information on methods and variables `RemoteMethod` was added.
+It separates one method to several methods, and each has it's own specific set of variables.
 
-Добавление этой возможности происходит в несколько этапов:
-- добавление аннотации `@KafkaHandlerRemoteMethod`:
-  - `methodPropertyName` - путь до поля входного дто, в котором лежит наименование метода 
-  (Путь может задаваться рекурсивно с использованием символа `.`)
-  
-  - `methodPropertyType` - тип этого поля (String.class - значение по-умолчанию), 
-  может содержать только тип String или Enum
-  
-  - `variablesPropertyName` - путь до поля входного дто, в котором лежат переменные метода
-    (Путь может задаваться рекурсивно с использованием символа `.`)
-  
-  - `methods` - список методов, допустимых для данного дто, задается аннотацией `@RemoteMethod`
-  
-- добавление аннотации `@RemoteMethod`:
-  - `description` - описание метода 
-  (Аналогично описанию `@KafkaHandlerDescription` только для отдельного метода)
-  - `propertyValue` - название метода, по которому соответствует свой набор переменных
-  
-  - `variables` - набор переменных для этого метода, задается аннотацией `@RemoteMethodVariable`
-  - `tags` - список меток для группировки методов (Например, call2, call3)
-  
-- добавление аннотации `@RemoteMethodVariable`:
-  - `description` - описание переменной
-  
-  - `propertyFieldName` - строковое представление ключа переменной, имя поля в формате Java для новой дто
-  
-  - `type` - тип переменной, может быть объектом класса, или массивом объектов классов
+To use this feature you will need to take following steps:
+- Add `@KafkaHandlerRemoteMethod` annotation:
+  - `methodPropertyName` - path to the input dto, in which method's name is stored
+    (Path can be specified recursively using `.` symbol)
 
-Для каждого метода генерируется два вспомогательных дто:
- - первое содержит список переменных для этого метода, поля соответствуют `propertyFieldName`, а
-каждое поле имеет описание в соответствии с `description` из `@RemoteMethodVariable`. 
-Наименование дто формируется следующим образом: `VariableBy\<MethodName\>`,
-где `MethodName` - `propertyValue` из `@RemoteMethod` в camel case
- - второе содержит оригинальное дто для этого хендлера и дто с переменными из предыдущего пункта, 
-название дто - `Execute\<OriginalDtoName\>By\<MethodName\>`, где `OriginalDtoName` - тип оригинального дто, 
-а `MethodName` как для предыдущего дто 
-**\[В дальнейшем будет называться вспомогательным дто\]**
+  - `methodPropertyType` - field's type (String.class - default value),
+    can only be String or Enum
 
-Для каждого `@RemoteMethod` генерируется отдельный эндпойнт, который на вход принимает вспомогательное дто.
-Хедеры и выходное значение дублируется как для основного метода. 
-Для отправки сообщения через такой эндпойнт необходимо заполнить оригинальное дто и набор переменных и
-при отправке название метода и набор переменных копируется в оригинальное дто и отправляется в кафку.
+  - `variablesPropertyName` - path to the input dto, in which method's variables is stored
+    (Path can be specified recursively using `.` symbol)
 
-Использование такого подхода позволяет Swagger'у считывать такие переменные, отображать их на ui, 
-корректно заполнять, а формированием оригинального дто занимается контроллер, 
-который и отправляет сообщения в кафку.
+  - `methods` - list of methods, available for dto, specified by `@RemoteMethod` annotaton
+
+- adding `@RemoteMethod` annotation:
+  - `description` - method description
+    (same as `@KafkaHandlerDescription` description, but for a separate method)
+  - `propertyValue` - method's name, to wich it's set of variables corresponds
+
+  - `variables` - this method's set of variables, specified by `@RemoteMethodVariable` annotation
+  - `tags` - list of tags for method grouping (as example - call2, call3)
+
+- adding `@RemoteMethodVariable` annotation:
+  - `description` - variable description
+
+  - `propertyFieldName` - String presentation of variable's key, filed name of Java format for a new dto
+
+  - `type` - variable type, can be an object, or array of objects
+
+For every method two additional dtos will be generated:
+- First constist of methods list of veriables, fields corresponds to `propertyFieldName`, and
+  every fileds has a description corresponding to `description` from `@RemoteMethodVariable`.
+  Dto is named by format: `VariableBy\<MethodName\>`,
+  where `MethodName` - `propertyValue` from `@RemoteMethod` in camel case.
+- The second one constits of the original dto for this handler and dto with variables from the previous step.
+  Name of the dto - `Execute\<OriginalDtoName\>By\<MethodName\>`, where `OriginalDtoName` - type ofthe original dto,
+  and `MethodName` is as of the previous dto.
+  **\[following it will reffered to as additional dto\]**
+
+For every `@RemoteMethod` a separate endpoint will be generated, which will be accepting additional dto as input parameter.
+Headers and return value is the same as the original method's.
+To send messages by this endpoint it is required to fill original dto and it's set of variables and when message is sent, it will be copied and sent to Kafka.
+
+Using such approach allows Swagger to process, display them on the ui,
+correctly fill them, and controller forms an original dto, that then will be sent to Kafka.
 
 ### JMS
-Путь контроллера имеет вид `/jms/<название очереди>/<Название дто>`\
+Path to controller has following format: `/jms/<query name>/<dto name>`\
 
-Работа с параметрами сообщения:
-- добавление параметров к сообщению происходит через добавление параметров для эндпойнта, далее на их основе заполняется `Message.setObjectProperty`;
-- есть возможность регистрировать реализации `JmsMessagePostProcessor` интерфейса, что будут вызваны перед отправкой сообщения
+Working with message parameters:
+- added parameters to message happens by adding endpoint parameters, then `Message.setObjectProperty` is filled;
+- It is possible to register `JmsMessagePostProcessor` implementatons, which will be called before sending the message.
 ```java
 @Configuration
 public class ServiceConfiguration {
@@ -280,5 +279,5 @@ public class ServiceConfiguration {
 }
 ```
 
-## История изменений
-Представлена в файле CHANGELOG.md
+## Change history
+Change history is written to CHANGELOG.md
