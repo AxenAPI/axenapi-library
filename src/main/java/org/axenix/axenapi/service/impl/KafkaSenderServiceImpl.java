@@ -17,6 +17,7 @@
 
 package org.axenix.axenapi.service.impl;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.axenix.axenapi.service.HeaderAccessorService;
@@ -24,19 +25,17 @@ import org.axenix.axenapi.service.KafkaClient4AxenAPI;
 import org.axenix.axenapi.service.KafkaSenderService;
 import org.axenix.axenapi.service.ResponseHeaderExtractorService;
 import org.axenix.axenapi.utils.KafkaHeaderAccessor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.support.converter.MessagingMessageConverter;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @RequiredArgsConstructor
 public class KafkaSenderServiceImpl implements KafkaSenderService {
-    @Value( "${axenapi.headers.sendBytes:false}" )
+    @Value( "${swagger4kafka.headers.sendBytes:false}" )
     private Boolean sendBytes;
 
     private final HeaderAccessorService headerAccessorService;
@@ -45,7 +44,7 @@ public class KafkaSenderServiceImpl implements KafkaSenderService {
 
     @Override
     public void send(String topicName, Object message, Map<String, String> params, HttpServletResponse servletResponse) {
-        // TODO get headers handler
+        // TODO получение обработчика headers у message
         // KafkaHeaderAccessor headerAccessor = headerAccessorService.getHeaderAccessor(topicName, params);
         KafkaHeaderAccessor headerAccessor = new KafkaHeaderAccessor();
 
@@ -73,7 +72,7 @@ public class KafkaSenderServiceImpl implements KafkaSenderService {
 
     @Override
     public void send(String topicName, Object message, Map<String, String> params) {
-        // TODO get headers handler for message
+        // TODO получение обработчика headers у message
         // KafkaHeaderAccessor headerAccessor = headerAccessorService.getHeaderAccessor(topicName, params);
         KafkaHeaderAccessor headerAccessor = new KafkaHeaderAccessor();
 

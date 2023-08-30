@@ -17,13 +17,13 @@
 
 package org.axenix.axenapi.service.impl;
 
+import jakarta.jms.JMSException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axenix.axenapi.jms.JmsMessagePostProcessor;
 import org.axenix.axenapi.jms.JmsTemplateRegistry;
 import org.axenix.axenapi.service.JmsSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import javax.jms.JMSException;
 import org.springframework.jms.core.JmsTemplate;
 
 import java.util.ArrayList;
