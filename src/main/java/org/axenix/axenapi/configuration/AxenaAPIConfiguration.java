@@ -22,6 +22,7 @@ import org.axenix.axenapi.consts.Headers;
 import org.axenix.axenapi.jms.JmsTemplateRegistry;
 import org.axenix.axenapi.service.*;
 import org.axenix.axenapi.service.impl.*;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,6 +31,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnProperty(prefix = "axenapi.kafka.swagger", name = "enabled", havingValue = "true")
 @ComponentScan(basePackages = "org.axenix.axenapi")
+@AutoConfigureOrder
 public class AxenaAPIConfiguration {
 
     @Bean
