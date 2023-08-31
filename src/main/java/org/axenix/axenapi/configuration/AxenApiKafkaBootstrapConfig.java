@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
 public class AxenApiKafkaBootstrapConfig {
     @Bean
     @ConditionalOnMissingBean
-    public KafkaBootstrapForAxenAPI kafkaBootstrapForAxenAPIBean() {
+    public KafkaBootstrapForAxenAPI kafkaBootstrapForAxenAPI() {
         return new KafkaBootstrapForAxenAPIBean();
     }
 }
