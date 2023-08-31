@@ -41,8 +41,8 @@ public class KafkaProducerConfig {
 
     private final KafkaBootstrapForAxenAPI bootstrapAddress;
 
-    public KafkaProducerConfig(KafkaBootstrapForAxenAPI bootstrapAddress) {
-        this.bootstrapAddress = bootstrapAddress;
+    public KafkaProducerConfig(KafkaBootstrapForAxenAPI kafkaBootstrapForAxenAPI) {
+        this.bootstrapAddress = kafkaBootstrapForAxenAPI;
     }
 
     @Bean

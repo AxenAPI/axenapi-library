@@ -1,5 +1,4 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration
+org.axenix.axenapi.configuration.AxenApiKafkaBootstrapConfig
 org.axenix.axenapi.configuration.AxenaAPIConfiguration
 org.axenix.axenapi.configuration.KafkaProducerConfig
 org.axenix.axenapi.configuration.KafkaClientConfig
-org.axenix.axenapi.configuration.AxenApiKafkaBootstrapConfig
