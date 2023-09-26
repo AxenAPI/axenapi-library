@@ -3,6 +3,7 @@ plugins {
 	id 'org.sonarqube' version '2.7'
 	id 'maven-publish'
 	id 'java'
+	id 'signing'
 }
 
 group = 'org.axenix'
@@ -91,6 +92,11 @@ tasks.withType(Javadoc) {
 	options.addStringOption('Xdoclint:none', '-quiet')
 }
 
+java {
+	withJavadocJar()
+	withSourcesJar()
+}
+
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
@@ -98,8 +104,16 @@ publishing {
 			groupId project.group
 			version version
 			from components.java
-			//artifact sourcesJar
-			//artifact javadocJar
+			pom {
+				name = 'AxenAPI'
+				description = 'Library for generation Spring conrollers by consumers (kafka consumers and other).'
+				licenses {
+					license {
+						name = 'The Apache License, Version 2.0'
+						url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					}
+				}
+			}
 		}
 	}
 	repositories {
