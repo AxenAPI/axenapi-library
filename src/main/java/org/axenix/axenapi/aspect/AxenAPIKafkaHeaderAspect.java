@@ -1,6 +1,6 @@
 
 /*
- * Copyright [yyyy] [name of copyright owner]
+ * Copyright (C) 2023 Axenix Innovations LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ public class AxenAPIKafkaHeaderAspect {
 //    private final TokenProducerService tokenProducerService;
 //
 //    /**
-//     * Меняет пользовательский или сервисный токен.
+//     * Changes a user or service token.
 //     *
-//     * @param joinPoint точка соединения
-//     * @return Контекст.
+//     * @param joinPoint connection point
+//     * @return context.
 //     */
 //    @Around(
 //            "execution(public **.model.security.context.CallContext " +
@@ -41,16 +41,15 @@ public class AxenAPIKafkaHeaderAspect {
 //    )
 //    @SuppressWarnings("unchecked")
 //    public Object replaceHeaders(ProceedingJoinPoint joinPoint) throws Throwable {
-//        /* Получение списка аргументов функции для доступа к мапе хедеров. */
+//        /* Getting a list of function arguments for accessing the header map. */
 //        List<Object> args = Arrays.asList(joinPoint.getArgs());
 //        Map<String, Object> headers = (Map<String, Object>) args.get(0);
 //
-//        /* Проверка, что метод был вызван из текущего сервиса через сваггер. */
-//        /* Признак того, что мы отправили сообщение в кафку через сваггер - свой сервисный токен. */
-//        if (headers.containsKey(Constants.SERVICE_TOKEN_KEY)) {
+//        /* Check that the method was called from the current service via a swagger. */
+//        /* A sign that we sent a message to Kafka through a swagger - our service token. *///        if (headers.containsKey(Constants.SERVICE_TOKEN_KEY)) {
 //            String serviceToken = KafkaHeaderAccessor.fromStringHeader(headers, Headers.SERVICE_ACCESS_TOKEN);
 //
-//            /* Если вызов был из другого сервиса, то не меняем существующую логику. */
+//            /* If the call was from another service, then we do not change the existing logic. */
 //            if (!Objects.equals(serviceToken, serviceTokenManager.getAccessToken())) {
 //                return joinPoint.proceed(joinPoint.getArgs());
 //            }
@@ -62,7 +61,7 @@ public class AxenAPIKafkaHeaderAspect {
 //
 //        UUID messageId = KafkaHeaderAccessor.fromUUIDHeader(headers, Headers.MESSAGE_ID);
 //
-//        /* Подменяем все необходимые хедеры и передаем новые аргументы в функцию. */
+//        /* We replace all the necessary headers and pass new arguments to the function. */
 //        headers = tokenProducerService.replaceTokenIntoParams(headers, messageId);
 //
 //        return joinPoint.proceed(new Object[] { headers });
