@@ -17,7 +17,7 @@
 
 package org.axenix.axenapi.jms;
 
-import javax.jms.Message;
+import jakarta.jms.Message;
 
 /**
  * JMS message processor (before sending). The last place in the lib for message proceeding before sending.

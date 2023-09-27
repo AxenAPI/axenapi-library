@@ -11,4 +11,4 @@ buildscript {
 
 apply plugin: 'net.vivin.gradle-semantic-build-versioning'
 
-rootProject.name = 'axenapi'
+rootProject.name = 'axenapi-spring6'

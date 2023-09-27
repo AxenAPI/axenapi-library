@@ -17,6 +17,7 @@
 
 package org.axenix.axenapi.service.impl;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.axenix.axenapi.service.HeaderAccessorService;
@@ -24,13 +25,11 @@ import org.axenix.axenapi.service.KafkaClient4AxenAPI;
 import org.axenix.axenapi.service.KafkaSenderService;
 import org.axenix.axenapi.service.ResponseHeaderExtractorService;
 import org.axenix.axenapi.utils.KafkaHeaderAccessor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.support.converter.MessagingMessageConverter;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
