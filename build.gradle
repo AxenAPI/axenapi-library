@@ -97,8 +97,8 @@ java {
 	withSourcesJar()
 }
 
-String nexus_user = System.getenv('NEXUS_USER').toString()
-String nexus_password = System.getenv('NEXUS_PASSAWORD').toString()
+String nexus_user = System.getenv('NEXUS_USER')
+String nexus_password = System.getenv('NEXUS_PASSWORD')
 
 publishing {
 	publications {
@@ -123,11 +123,8 @@ publishing {
 		maven {
 			allowInsecureProtocol = true
 			url System.getenv('NEXUS_SERVER_URL').toString()
-			credentials {
-				username nexus_user
-				password nexus_password
-
-			}
+			credentials.setUsername(nexus_user)
+			credentials.setPassword(nexus_password)
 		}
 	}
 
