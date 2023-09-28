@@ -124,8 +124,9 @@ publishing {
 			allowInsecureProtocol = true
 			url System.getenv('NEXUS_SERVER_URL').toString()
 			credentials {
-				username "$System.env.NEXUS_USER"
-				password "$System.env.NEXUS_PASSAWORD"
+				username nexus_user
+				password nexus_password
+
 			}
 		}
 	}
