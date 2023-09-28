@@ -119,10 +119,10 @@ publishing {
 	repositories {
 		maven {
 			allowInsecureProtocol = true
-			url "${NEXUS_SERVER}"
+			url "${System.env.NEXUS_SERVER_URL}"
 			credentials {
-				username NEXUS_USER
-				password NEXUS_PASSWORD
+				username "${System.env.NEXUS_USER}"
+				password "${System.env.NEXUS_PASSAWORD}"
 			}
 		}
 	}
