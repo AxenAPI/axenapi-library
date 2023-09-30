@@ -80,14 +80,6 @@ dependencies {
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
 }
 
-//task sourcesJar(type: Jar) {
-//	from sourceSets.main.allJava
-//}
-
-task javadocJar(type: Jar) {
-	from javadoc
-}
-
 tasks.withType(Javadoc) {
 	options.addStringOption('Xdoclint:none', '-quiet')
 }
