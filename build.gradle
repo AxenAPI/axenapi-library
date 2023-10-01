@@ -91,6 +91,14 @@ java {
 
 String nexus_user = System.getenv('NEXUS_USER')
 String nexus_password = System.getenv('NEXUS_PASSWORD')
+String repoURL = ""
+
+if (version.contains('-')) {
+	repoURL = System.getenv('NEXUS_SERVER_URL_SNAPSHOT').toString()
+}
+if (version.endsWith('-SNAPSHOT')) {
+	repoURL = System.getenv('NEXUS_SERVER_URL_RELEASE').toString()
+}
 
 publishing {
 	publications {
@@ -114,7 +122,7 @@ publishing {
 	repositories {
 		maven {
 			allowInsecureProtocol = true
-			url System.getenv('NEXUS_SERVER_URL').toString()
+			url repoURL
 			credentials.setUsername(nexus_user)
 			credentials.setPassword(nexus_password)
 		}
