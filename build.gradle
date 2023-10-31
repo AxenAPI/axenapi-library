@@ -99,6 +99,10 @@ if (version.endsWith('-SNAPSHOT')) {
 	repoURL = System.getenv('NEXUS_SERVER_URL_RELEASE').toString()
 }
 
+signing {
+	sign publishing.publications
+}
+
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
