@@ -98,7 +98,7 @@ if (version.endsWith('-SNAPSHOT')) {
 } else {
 	repoURL = System.getenv('NEXUS_SERVER_URL_RELEASE').toString()
 }
-
+System.out.println("AXENAPI_PUBLIC_KEY_FILE=" + System.getenv('AXENAPI_PUBLIC_KEY_FILE').toString())
 signing {
 	sign publishing.publications
 }
