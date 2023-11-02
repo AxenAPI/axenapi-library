@@ -33,6 +33,7 @@ Using headers:
 - Auth token will be sent as header with name, that was specified  in `kafka.access.token.header` parameter, if annotation `@KafkaSecured` was used.
 
 
+
 ## Controller generation parameters:
 Generation parameters can be specified in `axenapi.properties`. File should be stored in root directory of your project.
 File example:
