@@ -98,14 +98,8 @@ if (version.endsWith('-SNAPSHOT')) {
 } else {
 	repoURL = System.getenv('NEXUS_SERVER_URL_RELEASE').toString()
 }
-System.out.println("AXENAPI_PUBLIC_KEY_FILE=" + System.getenv('AXENAPI_PUBLIC_KEY_FILE').toString())
-System.out.println("AXENAPI_PRIVATE_KEY_FILE=" + System.getenv('AXENAPI_PRIVATE_KEY_FILE').toString())
 
 signing {
-	def signingKeyId = findProperty("signing.keyId")
-	def signingKey = System.getenv('AXENAPI_PASS_PRIVATE_KEY_FILE').toString()
-	def signingPassword = findProperty("signing.password")
-	useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
 	sign publishing.publications
 }
 
