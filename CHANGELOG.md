@@ -1,5 +1,7 @@
 ### version 1.0.1
 1) GPG signing
+2) change group pro.axenix-innovation
+3) change package on pro.axenix-innovation
 ### version 1.0.0
 1) create from kafka listeners REST controllers
 2) using axenapi.properties. File should be stored in root directory of your project. Parameters:package,kafka.handler.annotaion, use.standart.kafkahandler.annotation, kafka.access.token.header, language
