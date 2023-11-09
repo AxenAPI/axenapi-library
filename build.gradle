@@ -7,7 +7,7 @@ plugins {
 	id 'signing'
 }
 
-group = 'org.axenix'
+group = 'pro.axenix-innovation'
 
 sourceCompatibility = '17'
 targetCompatibility = '17'
@@ -100,7 +100,9 @@ if (version.endsWith('-SNAPSHOT')) {
 	repoURL = System.getenv('NEXUS_SERVER_URL_RELEASE').toString()
 }
 
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 signing {
+	required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
 	sign publishing.publications
 }
 
