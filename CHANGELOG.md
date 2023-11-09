@@ -13,7 +13,7 @@
    6) `@KafkaRemoteMethods` - to separate one method to several by method name and it's parameters;
    7) `@RemoteMethod` - to specify method's name, it's tags and variables;
    8) `@RemoteMethodVariable` - to specify one of the method's variables.
-   9) `@KafkaSecured` - if authorization is required. In brakcets you can specify a securirty scheme's of OpenAPI specification name. Default value -  `Internal-Token`
+   9) `@KafkaSecured` - if authorization is required. In brackets, you can specify a security scheme's of OpenAPI specification name. Default value -  `Internal-Token`
 5) Generated controller will return value with appropriate type.
 
 
