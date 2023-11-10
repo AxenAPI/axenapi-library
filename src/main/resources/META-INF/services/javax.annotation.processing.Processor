@@ -1,2 +1,2 @@
-org.axenix.axenapi.processor.KafkaControllerProcessor
-org.axenix.axenapi.processor.JmsControllerProcessor
+pro.axenix_innovation.axenapi.processor.KafkaControllerProcessor
+pro.axenix_innovation.axenapi.processor.JmsControllerProcessor

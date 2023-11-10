@@ -6,7 +6,7 @@ plugins {
 	id 'signing'
 }
 
-group = 'org.axenix'
+group = 'pro.axenix-innovation'
 
 sourceCompatibility = '11'
 targetCompatibility = '11'
@@ -99,6 +99,12 @@ if (version.endsWith('-SNAPSHOT')) {
 	repoURL = System.getenv('NEXUS_SERVER_URL_RELEASE').toString()
 }
 
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+signing {
+	required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
+	sign publishing.publications
+}
+
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
@@ -122,8 +128,8 @@ publishing {
 		maven {
 			name = "GitHubPackages"
 			url = uri("https://maven.pkg.github.com/AxenAPI/axenapi-library")
-			credentials.setUsername(project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER"))
-			credentials.setPassword(project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN"))
+			credentials.setUsername(project.findProperty("gpr.user")?: System.getenv("GITHUB_USER"))
+			credentials.setPassword(project.findProperty("gpr.key")?: System.getenv("GITHUB_TOKEN"))
 		}
 		maven {
 			allowInsecureProtocol = true
