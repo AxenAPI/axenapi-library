@@ -99,10 +99,10 @@ String sonatypeRepoURL = ""
 
 if (version.endsWith('-SNAPSHOT')) {
     repoURL = System.getenv('NEXUS_SERVER_URL_SNAPSHOT').toString()
-    sonatypeRepoURL = System.getenv('SONATYPE_NEXUS_SERVER_URL_SNAPSHOT').toString()
+    sonatypeRepoURL = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 } else {
     repoURL = System.getenv('NEXUS_SERVER_URL_RELEASE').toString()
-    sonatypeRepoURL = System.getenv('SONATYPE_NEXUS_SERVER_URL_RELEASE').toString()
+    sonatypeRepoURL = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
