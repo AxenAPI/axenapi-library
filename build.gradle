@@ -120,23 +120,33 @@ publishing {
             from components.java
             pom {
                 name = 'AxenAPI'
-                description = 'Library for generation Spring conrollers by consumers (kafka consumers and other).'
+                description = 'Library for generation Spring conrollers by consumers (kafka consumers and other) with Swagger annotations. After that you can use it in your project and use Swagger UI.'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
                         url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
+                developers {
+                    developer {
+                        id = "axenix-innovation"
+                        name = "AxenAPI-Generator Contributors"
+                        email = "axenapi-info@axenix.pro"
+                    }
+                    scm {
+                        url = "https://github.com/AxenAPI/axenapi-library"
+                        connection = "scm:git:git://github.com/AxenAPI/axenapi-library.git"
+                        developerConnection = "scm:git:ssh://git@github.com:AxenAPI/axenapi-library.git"
+                    }
+                    issueManagement {
+                        system = "GitHub"
+                        url = "https://github.com/AxenAPI/axenapi-library/issues"
+                    }
+                }
             }
         }
     }
     repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/AxenAPI/axenapi-library")
-            credentials.setUsername(project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER"))
-            credentials.setPassword(project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN"))
-        }
         maven {
             allowInsecureProtocol = true
             url repoURL
