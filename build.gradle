@@ -1,9 +1,9 @@
 plugins {
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-	id 'org.sonarqube' version '2.7'
-	id 'maven-publish'
-	id 'java'
-	id 'signing'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'org.sonarqube' version '2.7'
+    id 'maven-publish'
+    id 'java'
+    id 'signing'
 }
 
 group = 'pro.axenix-innovation'
@@ -16,128 +16,148 @@ tasks.withType(Javadoc) { options.encoding = "UTF-8" }
 
 
 jar {
-	manifest {
-		attributes 'Version' : archiveVersion,
-				'Build-time' : new Date().format("dd-MM-yyyy'T'HH:mm:ss")
-	}
+    manifest {
+        attributes 'Version': archiveVersion,
+                'Build-time': new Date().format("dd-MM-yyyy'T'HH:mm:ss")
+    }
 }
 
 repositories {
-	mavenLocal()
-	mavenCentral()
+    mavenLocal()
+    mavenCentral()
 }
 
 subprojects {
-	version = rootProject.version
+    version = rootProject.version
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 
 dependencyManagement {
-	imports {
-		mavenBom "org.springframework.boot:spring-boot-dependencies:2.2.2.RELEASE"
-	}
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:2.2.2.RELEASE"
+    }
 }
 
 dependencies {
 
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure
-	implementation 'org.springframework.boot:spring-boot-autoconfigure'
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure
-	implementation 'org.springframework.boot:spring-boot-starter'
-	// https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
-	implementation 'org.springframework.kafka:spring-kafka'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure
+    implementation 'org.springframework.boot:spring-boot-starter'
+    // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
+    implementation 'org.springframework.kafka:spring-kafka'
 
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	// jms
-	implementation 'org.springframework:spring-jms'
-	implementation "javax.jms:javax.jms-api:2.0.1"
+    // jms
+    implementation 'org.springframework:spring-jms'
+    implementation "javax.jms:javax.jms-api:2.0.1"
 
-	// lombok
-	compileOnly 'org.projectlombok:lombok:1.18.22'
-	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-	// AspectJ
-	implementation'org.aspectj:aspectjweaver:1.9.6'
+    // AspectJ
+    implementation 'org.aspectj:aspectjweaver:1.9.6'
 
-	// swagger annotations
-	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-common
-	implementation 'org.springdoc:springdoc-openapi-common:1.6.13'
+    // swagger annotations
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-common
+    implementation 'org.springdoc:springdoc-openapi-common:1.6.13'
 
-	// code generation
-	implementation 'com.squareup:javapoet:1.10.0'
+    // code generation
+    implementation 'com.squareup:javapoet:1.10.0'
 
-	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.14.0'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.0'
 
-	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-	implementation 'org.apache.commons:commons-lang3:3.12.0'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
 }
 
 tasks.withType(Javadoc) {
-	options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('Xdoclint:none', '-quiet')
 }
 
 java {
-	withJavadocJar()
-	withSourcesJar()
+    withJavadocJar()
+    withSourcesJar()
 }
 
 String nexus_user = System.getenv('NEXUS_USER')
 String nexus_password = System.getenv('NEXUS_PASSWORD')
+String sonatype_nexus_user = System.getenv('SONATYPE_NEXUS_USER')
+String sonatype_nexus_password = System.getenv('SONATYPE_NEXUS_PASSWORD')
+
 String repoURL = ""
+String sonatypeRepoURL = ""
 
 if (version.endsWith('-SNAPSHOT')) {
-	repoURL = System.getenv('NEXUS_SERVER_URL_SNAPSHOT').toString()
+    repoURL = System.getenv('NEXUS_SERVER_URL_SNAPSHOT').toString()
+    sonatypeRepoURL = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 } else {
-	repoURL = System.getenv('NEXUS_SERVER_URL_RELEASE').toString()
+    repoURL = System.getenv('NEXUS_SERVER_URL_RELEASE').toString()
+    sonatypeRepoURL = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 signing {
-	required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
-	sign publishing.publications
+    required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
+    sign publishing.publications
 }
 
 publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			artifactId project.name
-			groupId project.group
-			version version
-			from components.java
-			pom {
-				name = 'AxenAPI'
-				description = 'Library for generation Spring conrollers by consumers (kafka consumers and other).'
-				licenses {
-					license {
-						name = 'The Apache License, Version 2.0'
-						url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-					}
-				}
-			}
-		}
-	}
-	repositories {
-		maven {
-			name = "GitHubPackages"
-			url = uri("https://maven.pkg.github.com/AxenAPI/axenapi-library")
-			credentials.setUsername(project.findProperty("gpr.user")?: System.getenv("GITHUB_USER"))
-			credentials.setPassword(project.findProperty("gpr.key")?: System.getenv("GITHUB_TOKEN"))
-		}
-		maven {
-			allowInsecureProtocol = true
-			url repoURL
-			credentials.setUsername(nexus_user)
-			credentials.setPassword(nexus_password)
-		}
-	}
-
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId project.name
+            groupId project.group
+            version version
+            from components.java
+            pom {
+                name = 'AxenAPI'
+                description = 'Library for generation Spring conrollers by consumers (kafka consumers and other) with Swagger annotations. After that you can use it in your project and use Swagger UI.'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = "axenix-innovation"
+                        name = "AxenAPI-Generator Contributors"
+                        email = "axenapi-info@axenix.pro"
+                    }
+                    scm {
+                        url = "https://github.com/AxenAPI/axenapi-library"
+                        connection = "scm:git:git://github.com/AxenAPI/axenapi-library.git"
+                        developerConnection = "scm:git:ssh://git@github.com:AxenAPI/axenapi-library.git"
+                    }
+                    issueManagement {
+                        system = "GitHub"
+                        url = "https://github.com/AxenAPI/axenapi-library/issues"
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            allowInsecureProtocol = true
+            url repoURL
+            credentials.setUsername(nexus_user)
+            credentials.setPassword(nexus_password)
+        }
+        maven {
+            allowInsecureProtocol = true
+            url sonatypeRepoURL
+            credentials.setUsername(sonatype_nexus_user)
+            credentials.setPassword(sonatype_nexus_password)
+        }
+    }
 }
-
