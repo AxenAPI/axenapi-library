@@ -121,6 +121,7 @@ publishing {
             pom {
                 name = 'AxenAPI'
                 description = 'Library for generation Spring conrollers by consumers (kafka consumers and other) with Swagger annotations. After that you can use it in your project and use Swagger UI.'
+                url = 'https://github.com/AxenAPI/axenapi-library'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
