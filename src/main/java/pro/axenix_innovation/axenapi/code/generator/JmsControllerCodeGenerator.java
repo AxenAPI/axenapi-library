@@ -84,7 +84,7 @@ public class JmsControllerCodeGenerator {
         System.out.println("Methods generated for jms =========================");
 
         handlers.forEach(h ->
-            System.out.printf("JmsTemplateName: %s,\npayload: %s,\ndestination: %s,\ndescription,\nproperties: %s\n",
+            System.out.printf("JmsTemplateName: %s,\npayload: %s,\ndestination: %s,\ndescription: %s,\nproperties: %s\n",
                 h.getJmsTemplateName(),
                 h.getPayload(),
                 h.getDestination(),
