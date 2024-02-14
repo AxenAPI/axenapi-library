@@ -39,7 +39,7 @@
 ```
 package = com.example.demo
 kafka.handler.annotaion = com.example.demo.annotation.MyKafkaHandler
-use.standart.kafkahandler.annotation = true
+use.standard.kafkahandler.annotation = true
 kafka.access.token.header = SERVICE_ACCESS_TOKEN
 ```
 **Описание параметров:**
@@ -48,7 +48,7 @@ kafka.access.token.header = SERVICE_ACCESS_TOKEN
 |--------------------------------------|--------------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | package                              | String             | -                     | указывается пакет, в который  бцдет обрабатываться с помощью annotationProcessor. Consumers из других пакетов будут проигнорированы и по ним не будет сгенерирован spring mvc controller. Если не указано, но сканируется весь проект.                                                                                              | 
 | kafka.handler.annotaion              | String             | -                     | если в проекте для kafka consumrs используется кастомная аннотация, то чтобы annotationProcessor учитывал такие consumers надо указать в параметре полное наименование вашей кастомной аннотации. Если не указано, то annotationProcessor работат с аннотацией из spring-kafka: `org.springframework.kafka.annotation.KafkaHandler` |
-| use.standart.kafkahandler.annotation | String             | true                  | если указан `false`, то будут учитывать только consumers с вашей кастомной аннотацией. Иначе, будут учитыватья и consumers с аннотацией `org.springframework.kafka.annotation.KafkaHandler`.                                                                                                                                        |
+| use.standard.kafkahandler.annotation | String             | true                  | если указан `false`, то будут учитывать только consumers с вашей кастомной аннотацией. Иначе, будут учитыватья и consumers с аннотацией `org.springframework.kafka.annotation.KafkaHandler`.                                                                                                                                        |
 | kafka.access.token.header            | String             | Authorization         | наименования хедера, куда помещается токен авторизации при отправки в Kafka/JMS.                                                                                                                                                                                                                                                    |
 | language                             | String (eng / rus) | eng                   | язык генерации дополнительной инфорции. Возмозжые значения: eng, rus.                                                                                                                                                                                                                                                               |
 

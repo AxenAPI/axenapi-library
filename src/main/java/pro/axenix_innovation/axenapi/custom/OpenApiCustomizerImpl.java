@@ -2,8 +2,8 @@ package pro.axenix_innovation.axenapi.custom;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import org.apache.commons.lang3.StringUtils;
-import org.springdoc.core.SpringDocAnnotationsUtils;
-import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springdoc.core.customizers.OpenApiCustomizer;
+import org.springdoc.core.utils.SpringDocAnnotationsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -19,7 +19,7 @@ import java.util.HashSet;
  * that were not parsed by the OpenAPI implementation
  * (OpenAPI considers only those types that are used in the controller methods).
  */
-public class OpenApiCustomizerImpl implements OpenApiCustomiser, EnvironmentAware {
+public class OpenApiCustomizerImpl implements OpenApiCustomizer, EnvironmentAware {
     private Environment environment;
     private final HashSet<Class<Object>> handledClasses = new HashSet<>();
 
@@ -27,7 +27,7 @@ public class OpenApiCustomizerImpl implements OpenApiCustomiser, EnvironmentAwar
     public void customise(OpenAPI openApi) {
         var outgoingPackage = environment.getProperty(Info.PROP_OUTGOING_TYPES_PACKAGE);
 
-        if (StringUtils.isEmpty(outgoingPackage)) {
+        if (StringUtils.isBlank(outgoingPackage)) {
             // the method is called at the end of the parsing, the set can be cleared
             handledClasses.clear();
             return;
@@ -44,7 +44,7 @@ public class OpenApiCustomizerImpl implements OpenApiCustomiser, EnvironmentAwar
                 if (!handledClasses.contains(cls)) {
                     // this will add the type as a component to the OpenAPI spec
                     SpringDocAnnotationsUtils.extractSchema(openApi.getComponents(),
-                            cls, null, null);
+                            cls, null, null, openApi.getSpecVersion());
                 }
             } catch (ClassNotFoundException ignored) {}
         });

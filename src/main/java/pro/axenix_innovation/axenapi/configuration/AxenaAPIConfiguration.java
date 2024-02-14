@@ -20,7 +20,7 @@ package pro.axenix_innovation.axenapi.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import io.swagger.v3.core.util.Json;
-import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -85,7 +85,7 @@ public class AxenaAPIConfiguration {
     }
 
     @Bean
-    public OpenApiCustomiser openApiCustomizerOutgoing() {
+    public OpenApiCustomizer openApiCustomizerOutgoing() {
         return new OpenApiCustomizerImpl();
     }
 
