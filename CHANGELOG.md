@@ -4,7 +4,7 @@
 3) change package on pro.axenix-innovation
 ### version 1.0.0
 1) create from kafka listeners REST controllers
-2) using axenapi.properties. File should be stored in root directory of your project. Parameters:package,kafka.handler.annotaion, use.standart.kafkahandler.annotation, kafka.access.token.header, language
+2) using axenapi.properties. File should be stored in root directory of your project. Parameters:package,kafka.handler.annotaion, use.standard.kafkahandler.annotation, kafka.access.token.header, language
 3) use application.properties files. Properties: axenapi.kafka.swagger.enabled, axenapi.headers.sendBytes
 4) add annotations:
    1) `@KafkaHandlerResponse` - to add return type to your controller;
