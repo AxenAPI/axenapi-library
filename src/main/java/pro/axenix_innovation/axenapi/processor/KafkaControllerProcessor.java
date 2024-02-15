@@ -17,7 +17,6 @@
 
 package pro.axenix_innovation.axenapi.processor;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import pro.axenix_innovation.axenapi.annotation.*;
 import pro.axenix_innovation.axenapi.code.generator.KafkaControllerCodeGenerator;
@@ -45,7 +44,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes(value = {"org.springframework.kafka.annotation.KafkaListener"})
-@Slf4j
 public class KafkaControllerProcessor extends AbstractProcessor {
     private Messager messager;
     private KafkaControllerCodeGenerator codeGenerator;
@@ -131,7 +129,7 @@ public class KafkaControllerProcessor extends AbstractProcessor {
                             List<? extends AnnotationMirror> list = this.processingEnv.getElementUtils().getAllAnnotationMirrors(element);
                             boolean isHandler = false;
                             for (AnnotationMirror annotationMirror : list) {
-                                log.debug(annotationMirror.toString());
+                                System.out.printf(annotationMirror.toString());
                                 isHandler = checkAnnotationName(annotationMirror.toString());
                                 if(isHandler) break;
                             }

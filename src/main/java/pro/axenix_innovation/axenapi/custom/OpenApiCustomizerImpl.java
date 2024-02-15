@@ -27,7 +27,7 @@ public class OpenApiCustomizerImpl implements OpenApiCustomiser, EnvironmentAwar
     public void customise(OpenAPI openApi) {
         var outgoingPackage = environment.getProperty(Info.PROP_OUTGOING_TYPES_PACKAGE);
 
-        if (StringUtils.isEmpty(outgoingPackage)) {
+        if (StringUtils.isBlank(outgoingPackage)) {
             // the method is called at the end of the parsing, the set can be cleared
             handledClasses.clear();
             return;
