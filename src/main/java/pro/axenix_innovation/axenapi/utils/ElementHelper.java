@@ -129,11 +129,12 @@ public class ElementHelper {
             DeclaredType declaredType = (DeclaredType) returnedTypeMirror;
 
             List<? extends TypeMirror> arguments = declaredType.getTypeArguments();
-            if (arguments.size() != 1) {
-                return null;
-            }
 
-            return arguments.get(0);
+            if (arguments.isEmpty()) {
+                return declaredType;
+            } else if (arguments.size() == 1) {     // wrapper type with a single type argument
+                return arguments.get(0);
+            }
         }
 
         return null;
