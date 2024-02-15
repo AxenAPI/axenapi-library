@@ -1,5 +1,4 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.18'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.sonarqube' version '2.7'
     id 'maven-publish'
@@ -35,6 +34,13 @@ subprojects {
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
+    }
+}
+
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:2.7.18"
     }
 }
 
