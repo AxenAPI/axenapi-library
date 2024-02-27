@@ -41,7 +41,7 @@ File example:
 ```
 package = com.example.demo
 kafka.handler.annotaion = com.example.demo.annotation.MyKafkaHandler
-use.standart.kafkahandler.annotation = true
+use.standard.kafkahandler.annotation = true
 kafka.access.token.header = SERVICE_ACCESS_TOKEN
 ```
 **Parameters description:**
@@ -50,7 +50,7 @@ kafka.access.token.header = SERVICE_ACCESS_TOKEN
 |--------------------------------------|--------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | package                              | String | -             | Package, which well be processed by `annotationProcessor`. Consumers from other packages will be ignored. If not specified, all project will be scanned.                                                                                                                                     |
 | kafka.handler.annotaion              | String | -             | If custom annotations are used in your consumers, to `annotationProcessor` be able to process them correctly, full name of your custon annotation should be specified. If not specified, then annotationProcessor whil use spring-kafka: `org.springframework.kafka.annotation.KafkaHandler` |
-| use.standart.kafkahandler.annotation | String | true          | If `false`, then only consumers annotated with your custom annotations will be processed. Else consumers using `org.springframework.kafka.annotation.KafkaHandler` will be processed too.                                                                                                    |
+| use.standard.kafkahandler.annotation | String | true          | If `false`, then only consumers annotated with your custom annotations will be processed. Else consumers using `org.springframework.kafka.annotation.KafkaHandler` will be processed too.                                                                                                    |
 | kafka.access.token.header            | String | Authorization | Name of the header, in which auth token for в Kafka/JMS will be stored.                                                                                                                                                                                                                      |
 | language                             | String | eng           | Language of additional information in generated controllers. Supported values: eng, rus                                                                                                                                                                                                      | 
 

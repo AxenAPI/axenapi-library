@@ -19,14 +19,15 @@ package pro.axenix_innovation.axenapi.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import io.swagger.v3.core.util.Json;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import pro.axenix_innovation.axenapi.consts.Headers;
+import pro.axenix_innovation.axenapi.custom.ModelResolverCust;
+import pro.axenix_innovation.axenapi.custom.OpenApiCustomizerImpl;
 import pro.axenix_innovation.axenapi.jms.JmsTemplateRegistry;
 import pro.axenix_innovation.axenapi.service.*;
 import pro.axenix_innovation.axenapi.service.impl.*;
@@ -83,6 +84,15 @@ public class AxenaAPIConfiguration {
         return new TokenProducerServiceImpl();
     }
 
+    @Bean
+    public OpenApiCustomizer openApiCustomizerOutgoing() {
+        return new OpenApiCustomizerImpl();
+    }
+
+    @Bean
+    public ModelResolverCust modelResolverCust() {
+        return new ModelResolverCust(Json.mapper(), (OpenApiCustomizerImpl) openApiCustomizerOutgoing());
+    }
 //    @ConditionalOnBean(ServiceSecurityConfiguration.class)
 //    @Bean
 //    public SwaggerKafkaHeaderAspect swaggerKafkaHeaderAspect(
