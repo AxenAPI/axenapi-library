@@ -17,15 +17,17 @@
 
 package pro.axenix_innovation.axenapi.configuration;
 
-import pro.axenix_innovation.axenapi.service.KafkaClient4AxenAPI;
-import pro.axenix_innovation.axenapi.service.impl.KafkaClient4AxenAPIImpl;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
+import pro.axenix_innovation.axenapi.service.KafkaClient4AxenAPI;
+import pro.axenix_innovation.axenapi.service.impl.KafkaClient4AxenAPIImpl;
 
 @ConditionalOnProperty(prefix = "axenapi.kafka.swagger", name = "enabled", havingValue = "true")
+@ConditionalOnClass(KafkaTemplate.class)    // TODO
 @AutoConfigureAfter(KafkaProducerConfig.class)
 public class KafkaClientConfig {
     private final KafkaTemplate<String, Object> kafkaTemplate;

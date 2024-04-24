@@ -31,6 +31,8 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static pro.axenix_innovation.axenapi.utils.StringUtils.snakeToCamelCase;
+
 @RequiredArgsConstructor
 public abstract class BaseControllerCodeGenerator {
     protected final Filer filer;
@@ -637,21 +639,6 @@ public abstract class BaseControllerCodeGenerator {
 
     protected String generateVariableDtoClassName(String methodPropertyValue) {
         return "VariableBy" + methodPropertyValue;
-    }
-
-    protected String snakeToCamelCase(String snakeString) {
-        String camelString = snakeString.toLowerCase(Locale.ROOT);
-        camelString = camelString.substring(0, 1).toUpperCase() + camelString.substring(1);
-        while(camelString.contains("_")) {
-            camelString = camelString.replaceFirst(
-                    "_[a-z]",
-                    String.valueOf(Character.toUpperCase(
-                            camelString.charAt(camelString.indexOf("_") + 1))
-                    )
-            );
-        }
-
-        return camelString;
     }
 
     protected String qualifiedClassName(JavaFileMetadata javaFileMetadata) {

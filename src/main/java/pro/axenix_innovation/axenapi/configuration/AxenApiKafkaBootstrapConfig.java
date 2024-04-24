@@ -17,16 +17,19 @@
 
 package pro.axenix_innovation.axenapi.configuration;
 
-import pro.axenix_innovation.axenapi.service.KafkaBootstrapForAxenAPI;
-import pro.axenix_innovation.axenapi.service.impl.KafkaBootstrapForAxenAPIBean;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.core.KafkaTemplate;
+import pro.axenix_innovation.axenapi.service.KafkaBootstrapForAxenAPI;
+import pro.axenix_innovation.axenapi.service.impl.KafkaBootstrapForAxenAPIBean;
 
 @Configuration
 @ConditionalOnProperty(prefix = "axenapi.kafka.swagger", name = "enabled", havingValue = "true")
+@ConditionalOnClass(KafkaTemplate.class)
 @AutoConfigureOrder
 public class AxenApiKafkaBootstrapConfig {
     @Bean
