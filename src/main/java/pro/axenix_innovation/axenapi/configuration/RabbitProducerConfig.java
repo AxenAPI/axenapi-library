@@ -13,7 +13,7 @@ import pro.axenix_innovation.axenapi.service.RabbitSenderService;
 import pro.axenix_innovation.axenapi.service.impl.RabbitSenderServiceImpl;
 
 @Configuration
-@ConditionalOnProperty(prefix = "axenapi.kafka.swagger", name = "enabled", havingValue = "true")
+@ConditionalOnProperty(prefix = "axenapi.rabbit.swagger", name = "enabled", havingValue = "true")
 @ConditionalOnClass({RabbitTemplate.class, Channel.class})  // TODO
 @RequiredArgsConstructor
 public class RabbitProducerConfig implements InitializingBean {

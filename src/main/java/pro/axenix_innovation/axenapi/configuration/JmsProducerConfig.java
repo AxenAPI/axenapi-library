@@ -12,7 +12,7 @@ import pro.axenix_innovation.axenapi.service.JmsSenderService;
 import pro.axenix_innovation.axenapi.service.impl.DefaultJmsSenderService;
 
 @Configuration
-@ConditionalOnProperty(prefix = "axenapi.kafka.swagger", name = "enabled", havingValue = "true")
+@ConditionalOnProperty(prefix = "axenapi.jms.swagger", name = "enabled", havingValue = "true")
 @ConditionalOnClass({Message.class, JmsTemplate.class}) // TODO
 @RequiredArgsConstructor
 public class JmsProducerConfig {
