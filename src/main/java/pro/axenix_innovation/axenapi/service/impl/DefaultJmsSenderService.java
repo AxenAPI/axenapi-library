@@ -47,7 +47,7 @@ public class DefaultJmsSenderService implements JmsSenderService {
         params.forEach((key, value) -> log.debug("key: {} value: {}", key, value));
 
         JmsTemplate template = registry.receive(jmsTemplateName)
-            .orElseThrow(() -> new IllegalStateException("JmsTemplate " + jmsTemplateName + " not find"));
+            .orElseThrow(() -> new IllegalStateException("JmsTemplate " + jmsTemplateName + " not found"));
 
         template.convertAndSend(destination, payload, m -> {
             params.forEach((k, v) -> {

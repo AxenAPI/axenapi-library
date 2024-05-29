@@ -17,11 +17,7 @@
 
 package pro.axenix_innovation.axenapi.consts;
 
-public class Info {
-    private Info() {}
-
-    public static final String BASE_PACKAGE = "pro.axenix_innovation.axenapi";
-    public static final String CONTROLLER_PACKAGE = BASE_PACKAGE + ".controller";
-    public static final String DTO_PACKAGE = BASE_PACKAGE + ".dto";
-    public static final String PROP_OUTGOING_TYPES_PACKAGE = "axenapi.outgoing-types-package";
+public class RabbitGeneratorConstants {
+    public static final String SENDER_SERVICE_FIELD_NAME = "rabbitSenderService";
+    public static final String QUEUE_FIELD_NAME = "queue";
 }

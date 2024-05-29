@@ -38,6 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.capitalize;
+import static pro.axenix_innovation.axenapi.utils.StringUtils.snakeToCamelCase;
+
 @RequiredArgsConstructor
 public class JmsControllerCodeGenerator {
     private final Filer filer;
@@ -74,17 +77,18 @@ public class JmsControllerCodeGenerator {
                 .addMember("path", "$S", "/jms")
                 .build();
 
-        AnnotationSpec conditionalOnPropertySpec = AnnotationSpec
+        // TODO: not relevant probably
+        /*AnnotationSpec conditionalOnPropertySpec = AnnotationSpec
                 .builder(ConditionalOnProperty.class)
-                .addMember("prefix", "$S", "swagger4kafka")
+                .addMember("prefix", "$S", "axenapi.kafka.swagger")
                 .addMember("name", "$S", "enabled")
                 .addMember("havingValue", "$S","true")
-                .build();
+                .build();*/
 
         System.out.println("Methods generated for jms =========================");
 
         handlers.forEach(h ->
-            System.out.printf("JmsTemplateName: %s,\npayload: %s,\ndestination: %s,\ndescription,\nproperties: %s\n",
+            System.out.printf("JmsTemplateName: %s,\npayload: %s,\ndestination: %s,\ndescription: %s,\nproperties: %s\n",
                 h.getJmsTemplateName(),
                 h.getPayload(),
                 h.getDestination(),
@@ -104,7 +108,7 @@ public class JmsControllerCodeGenerator {
                 .addMethods(methods(handlers))
                 .addAnnotation(RestController.class)
                 .addAnnotation(requestMappingSpec)
-                .addAnnotation(conditionalOnPropertySpec)
+//                .addAnnotation(conditionalOnPropertySpec)
                 .build();
 
         JavaFile javaFile = JavaFile
@@ -214,8 +218,9 @@ public class JmsControllerCodeGenerator {
     }
 
     private String functionNameByChannelType(JmsHandlerMetadata handler) {
+        String destination = capitalize(snakeToCamelCase(handler.getDestination()));
         return SEND_FUNCTION_NAME
-                        .replace(PAYLOAD_KEY, handler.getPayload().getSimpleClassName());
+                        .replace(PAYLOAD_KEY, destination + handler.getPayload().getSimpleClassName());
     }
 
     private String pathByChannelType(JmsHandlerMetadata handler) {

@@ -18,18 +18,17 @@
 package pro.axenix_innovation.axenapi.utils;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.processing.Filer;
 import javax.tools.StandardLocation;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Locale;
 import java.util.Properties;
 
 @Getter
-@Slf4j
 public class AxenAPIProperties {
     public final static String ENG_LOCALE = "eng";
     public final static String RUS_LOCALE = "rus";
@@ -41,8 +40,6 @@ public class AxenAPIProperties {
     private boolean useKafkaHandlerAnnotation = true;
 
     private String language;
-
-    public static final String DEFAULT_HANDLER_VALUE = "org.springframework.kafka.annotation.KafkaHandler";
 
     public static final String PROPERTIES_FILE_NAME = "axenapi.properties";
 
@@ -58,25 +55,10 @@ public class AxenAPIProperties {
             fileInputStream = new FileInputStream(root + "/" + PROPERTIES_FILE_NAME);
 
             props.load(fileInputStream);
-
-            this.packageName = props.getProperty("package");
-            this.annotationName = props.getProperty("kafka.handler.annotaion");
-            String kafkaHandlerString = props.getProperty("use.standart.kafkahandler.annotation");
-            String tokenHeader = props.getProperty("kafka.access.token.header");
-            this.tokenHeader = tokenHeader == null ? "Authorization" : tokenHeader;
-            this.language = props.getProperty("language");
-            this.useKafkaHandlerAnnotation = kafkaHandlerString == null || Boolean.parseBoolean(kafkaHandlerString);
-            if(annotationName == null || annotationName.isEmpty()) {
-                annotationName = DEFAULT_HANDLER_VALUE;
-            }
-
-            if(language == null || language.isBlank()
-                    || !(ENG_LOCALE.equals(language) || RUS_LOCALE.equals(language))) {
-                language = ENG_LOCALE;
-            }
-
+        } catch (FileNotFoundException ignored) {
+            // no errors
         } catch (IOException ioException) {
-            System.out.println("Failed to read file or property");
+            System.out.println("Failed to read file " + PROPERTIES_FILE_NAME);
         } finally {
             if (fileInputStream != null) {
                 try {
@@ -87,6 +69,17 @@ public class AxenAPIProperties {
             }
         }
 
+        this.packageName = props.getProperty("package");
+        this.annotationName = props.getProperty("kafka.handler.annotaion"); // TODO: base name
+        String kafkaHandlerString = props.getProperty("use.standard.kafkahandler.annotation");
+        String tokenHeader = props.getProperty("kafka.access.token.header");
+        this.tokenHeader = tokenHeader == null ? "Authorization" : tokenHeader;
+        this.language = props.getProperty("language");
+        this.useKafkaHandlerAnnotation = kafkaHandlerString == null || Boolean.parseBoolean(kafkaHandlerString);
 
+        if (StringUtils.isBlank(language)
+                || !(ENG_LOCALE.equals(language) || RUS_LOCALE.equals(language))) {
+            language = ENG_LOCALE;
+        }
     }
 }

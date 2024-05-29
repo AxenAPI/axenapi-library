@@ -40,7 +40,7 @@ import javax.tools.Diagnostic;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@SupportedAnnotationTypes(value = {"org.axenix.swagger4kafka.annotation.jms.JmsHandler"})
+@SupportedAnnotationTypes(value = {"pro.axenix_innovation.axenapi.jms.JmsHandler"})
 public class JmsControllerProcessor extends AbstractProcessor {
     private Messager messager;
     private ElementHelper helper;
