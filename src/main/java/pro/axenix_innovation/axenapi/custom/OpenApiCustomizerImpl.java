@@ -48,7 +48,7 @@ public class OpenApiCustomizerImpl implements OpenApiCustomiser, EnvironmentAwar
                 if (!handledClasses.contains(cls)) {
                     // this will add the type as a component to the OpenAPI spec
                     SpringDocAnnotationsUtils.extractSchema(openApi.getComponents(),
-                            cls, null, null, openApi.getSpecVersion());
+                            cls, null, null);
                 }
             } catch (ClassNotFoundException ignored) {}
         });
