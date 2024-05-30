@@ -41,8 +41,6 @@ public class AxenAPIProperties {
 
     private String language;
 
-    public static final String DEFAULT_HANDLER_VALUE = "org.springframework.kafka.annotation.KafkaHandler";
-
     public static final String PROPERTIES_FILE_NAME = "axenapi.properties";
 
     public AxenAPIProperties(Filer filer) {
@@ -72,15 +70,12 @@ public class AxenAPIProperties {
         }
 
         this.packageName = props.getProperty("package");
-        this.annotationName = props.getProperty("kafka.handler.annotaion");
+        this.annotationName = props.getProperty("kafka.handler.annotaion"); // TODO: base name
         String kafkaHandlerString = props.getProperty("use.standard.kafkahandler.annotation");
         String tokenHeader = props.getProperty("kafka.access.token.header");
         this.tokenHeader = tokenHeader == null ? "Authorization" : tokenHeader;
         this.language = props.getProperty("language");
         this.useKafkaHandlerAnnotation = kafkaHandlerString == null || Boolean.parseBoolean(kafkaHandlerString);
-        if (StringUtils.isBlank(annotationName)) {
-            annotationName = DEFAULT_HANDLER_VALUE;
-        }
 
         if (StringUtils.isBlank(language)
                 || !(ENG_LOCALE.equals(language) || RUS_LOCALE.equals(language))) {

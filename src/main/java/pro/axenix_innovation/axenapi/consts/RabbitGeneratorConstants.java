@@ -15,13 +15,9 @@
  * limitations under the License.
 */
 
-package pro.axenix_innovation.axenapi.service;
+package pro.axenix_innovation.axenapi.consts;
 
-import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.Map;
-
-public interface KafkaSenderService {
-    void send(String topicName, Object message, Map<String, String> params, HttpServletResponse servletResponse);
-    void send(String topicName, Object message, Map<String, String> params);
+public class RabbitGeneratorConstants {
+    public static final String SENDER_SERVICE_FIELD_NAME = "rabbitSenderService";
+    public static final String QUEUE_FIELD_NAME = "queue";
 }

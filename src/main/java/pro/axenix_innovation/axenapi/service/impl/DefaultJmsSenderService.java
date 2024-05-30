@@ -17,13 +17,13 @@
 
 package pro.axenix_innovation.axenapi.service.impl;
 
+import jakarta.jms.JMSException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pro.axenix_innovation.axenapi.jms.JmsMessagePostProcessor;
 import pro.axenix_innovation.axenapi.jms.JmsTemplateRegistry;
 import pro.axenix_innovation.axenapi.service.JmsSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import javax.jms.JMSException;
 import org.springframework.jms.core.JmsTemplate;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class DefaultJmsSenderService implements JmsSenderService {
         params.forEach((key, value) -> log.debug("key: {} value: {}", key, value));
 
         JmsTemplate template = registry.receive(jmsTemplateName)
-            .orElseThrow(() -> new IllegalStateException("JmsTemplate " + jmsTemplateName + " not find"));
+            .orElseThrow(() -> new IllegalStateException("JmsTemplate " + jmsTemplateName + " not found"));
 
         template.convertAndSend(destination, payload, m -> {
             params.forEach((k, v) -> {

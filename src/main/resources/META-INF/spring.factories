@@ -1,6 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-pro.axenix_innovation.axenapi.configuration.AxenaAPIConfiguration,\
-pro.axenix_innovation.axenapi.configuration.KafkaProducerConfig,\
-pro.axenix_innovation.axenapi.configuration.KafkaClientConfig,\
-pro.axenix_innovation.axenapi.configuration.AxenApiKafkaBootstrapConfig  

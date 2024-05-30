@@ -45,6 +45,12 @@ dependencyManagement {
 }
 
 dependencies {
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure
+    implementation 'org.springframework.boot:spring-boot-starter'
+    // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
     implementation 'org.springframework.kafka:spring-kafka'
 
     // jms

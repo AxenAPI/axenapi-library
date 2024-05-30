@@ -20,8 +20,8 @@ package pro.axenix_innovation.axenapi.configuration;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import pro.axenix_innovation.axenapi.service.KafkaBootstrapForAxenAPI;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -30,19 +30,22 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import pro.axenix_innovation.axenapi.service.*;
+import pro.axenix_innovation.axenapi.service.impl.KafkaSenderServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
 @ConditionalOnProperty(prefix = "axenapi.kafka.swagger", name = "enabled", havingValue = "true")
-@AutoConfigureAfter(AxenApiKafkaBootstrapConfig.class)
+@ConditionalOnClass(KafkaTemplate.class)    // TODO
+@AutoConfigureAfter({AxenaAPIConfiguration.class, AxenApiKafkaBootstrapConfig.class})
 public class KafkaProducerConfig {
 
     private final KafkaBootstrapForAxenAPI bootstrapAddress;
 
-    public KafkaProducerConfig(KafkaBootstrapForAxenAPI bootstrapAddress) {
-        this.bootstrapAddress = bootstrapAddress;
+    public KafkaProducerConfig(KafkaBootstrapForAxenAPI kafkaBootstrapForAxenAPI) {
+        this.bootstrapAddress = kafkaBootstrapForAxenAPI;
     }
 
     @Bean
@@ -65,5 +68,14 @@ public class KafkaProducerConfig {
     @ConditionalOnMissingBean
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
+    }
+
+    @Bean
+    KafkaSenderService kafkaSenderService(
+            HeaderAccessorService headerAccessorService,
+            KafkaClient4AxenAPI kafkaClient4AxenAPI,
+            ResponseHeaderExtractorService responseHeaderExtractorService
+    ) {
+        return new KafkaSenderServiceImpl(headerAccessorService, kafkaClient4AxenAPI, responseHeaderExtractorService);
     }
 }

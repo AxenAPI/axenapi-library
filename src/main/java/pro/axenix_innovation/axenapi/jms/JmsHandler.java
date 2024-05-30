@@ -32,7 +32,7 @@ public @interface JmsHandler {
     String jmsTemplateName();
 
     /**
-     * @return list of parameters are sent in request and put in {@link javax.jms.Message#setObjectProperty(String, Object)}
+     * @return list of parameters are sent in request and put in {@link jakarta.jms.Message#setObjectProperty(String, Object)
      */
     JmsProperty[] properties() default {};
     Class<?> payload();

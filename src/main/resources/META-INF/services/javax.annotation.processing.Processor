@@ -1,2 +1,3 @@
 pro.axenix_innovation.axenapi.processor.KafkaControllerProcessor
+pro.axenix_innovation.axenapi.processor.RabbitControllerProcessor
 pro.axenix_innovation.axenapi.processor.JmsControllerProcessor
