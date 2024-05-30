@@ -17,7 +17,6 @@
 
 package pro.axenix_innovation.axenapi.service.impl;
 
-import jakarta.jms.JMSException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pro.axenix_innovation.axenapi.jms.JmsMessagePostProcessor;
@@ -26,6 +25,7 @@ import pro.axenix_innovation.axenapi.service.JmsSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 
+import javax.jms.JMSException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

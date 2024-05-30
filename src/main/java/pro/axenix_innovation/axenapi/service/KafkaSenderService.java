@@ -17,8 +17,8 @@
 
 package pro.axenix_innovation.axenapi.service;
 
-import jakarta.servlet.http.HttpServletResponse;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public interface KafkaSenderService {

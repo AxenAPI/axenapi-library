@@ -1,6 +1,6 @@
 package pro.axenix_innovation.axenapi.configuration;
 
-import jakarta.jms.Message;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -10,6 +10,8 @@ import org.springframework.jms.core.JmsTemplate;
 import pro.axenix_innovation.axenapi.jms.JmsTemplateRegistry;
 import pro.axenix_innovation.axenapi.service.JmsSenderService;
 import pro.axenix_innovation.axenapi.service.impl.DefaultJmsSenderService;
+
+import javax.jms.Message;
 
 @Configuration
 @ConditionalOnProperty(prefix = "axenapi.jms.swagger", name = "enabled", havingValue = "true")

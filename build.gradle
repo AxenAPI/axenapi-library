@@ -45,6 +45,7 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation 'org.springframework.amqp:spring-rabbit'
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
