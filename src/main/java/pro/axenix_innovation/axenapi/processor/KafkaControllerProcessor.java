@@ -128,22 +128,20 @@ public class KafkaControllerProcessor extends BaseControllerProcessor {
         );
 
         if (returnedTypeMirror == null) {
-            retData = super.returnedDataByMethod(method);
+            returnedTypeMirror = helper.getReturnedTypeMirror(method);
         } else {
             KafkaHandlerResponse annotation = method.getAnnotation(KafkaHandlerResponse.class);
             replyTopic = annotation.replayTopic();
         }
 
-        if ((returnedTypeMirror == null || returnedTypeMirror.toString().equals("java.lang.Void")) &&
-                retData == null) {
+        if (returnedTypeMirror == null || returnedTypeMirror.toString().equals("java.lang.Void")) {
             return null;
         }
 
-        if (returnedTypeMirror != null) {
-            retData.setReturnedType(classDataByTypeMirror(returnedTypeMirror));
-        }
-
-        retData.setReturnedTopicName(replyTopic);
-        return retData;
+        return ReturnedData
+                .builder()
+                .returnedType(classDataByTypeMirror(returnedTypeMirror))
+                .returnedTopicName(replyTopic)
+                .build();
     }
 }
