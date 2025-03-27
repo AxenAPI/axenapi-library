@@ -83,8 +83,9 @@ java {
 
 String nexus_user = System.getenv('NEXUS_USER')
 String nexus_password = System.getenv('NEXUS_PASSWORD')
-String sonatype_nexus_user = System.getenv('SONATYPE_NEXUS_USER')
-String sonatype_nexus_password = System.getenv('SONATYPE_NEXUS_PASSWORD')
+String ossrhToken = System.getenv('ossrhToken')
+String ossrhTokenPassword = System.getenv('ossrhTokenPassword')
+
 
 String repoURL = ""
 String sonatypeRepoURL = ""
@@ -149,8 +150,10 @@ publishing {
         maven {
             allowInsecureProtocol = true
             url sonatypeRepoURL
-            credentials.setUsername(sonatype_nexus_user)
-            credentials.setPassword(sonatype_nexus_password)
+            credentials {
+                username = ossrhToken
+                password = ossrhTokenPassword
+            }
         }
     }
 }
